@@ -22,6 +22,7 @@ use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Joaopaulolndev\FilamentEditProfile\FilamentEditProfilePlugin;
 use Joaopaulolndev\FilamentEditProfile\Pages\EditProfilePage;
+use Rmsramos\Activitylog\ActivitylogPlugin;
 
 class SystemPanelProvider extends PanelProvider
 {
@@ -76,7 +77,11 @@ class SystemPanelProvider extends PanelProvider
                         value: true,
                         directory: 'avatars',
                         rules: 'mimes:jpeg,png|max:1024'
-                    )
+                    ),
+                ActivitylogPlugin::make()
+                    ->navigationGroup('Administrativo')
+                    ->label('Log')
+                    ->pluralLabel('Logs')
             ])
             ->userMenuItems([
                 'profile' => MenuItem::make()
