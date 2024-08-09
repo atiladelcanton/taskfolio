@@ -5,6 +5,8 @@ namespace App\Filament\Resources\ProjectResource\Pages;
 use App\Filament\Resources\ProjectResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
+use Filament\Tables\Actions\DeleteAction;
+use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
@@ -19,7 +21,9 @@ class ListProjects extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            Actions\CreateAction::make()
+            ->label('Novo Projeto')
+            ->icon('heroicon-s-plus'),
         ];
     }
 
@@ -53,7 +57,8 @@ class ListProjects extends ListRecords
                 //
             ])
             ->actions([
-                EditAction::make(),
+                EditAction::make()->label('Editar'),
+                DeleteAction::make()->label('Deletar')
             ])
             ->bulkActions([
                 BulkActionGroup::make([
