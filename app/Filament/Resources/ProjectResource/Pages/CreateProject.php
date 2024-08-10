@@ -46,9 +46,10 @@ class CreateProject extends CreateRecord
                             ->required(),
                         Textarea::make('description')
                             ->columnSpanFull(),
-                    ])
+                    ]),
             ]);
     }
+
     protected function getCreatedNotification(): ?Notification
     {
         return Notification::make()

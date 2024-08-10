@@ -4,7 +4,6 @@ namespace App\Filament\Resources\ClientResource\Pages;
 
 use App\Actions\Clients\UpdateUserClient;
 use App\Filament\Resources\ClientResource;
-use App\Models\User;
 use Filament\Actions;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Section;
@@ -54,8 +53,8 @@ class EditClient extends EditRecord
                             ->image()
                             ->avatar()
                             ->imageEditor()
-                            ->circleCropper()
-                    ])
+                            ->circleCropper(),
+                    ]),
             ]);
     }
 
@@ -65,14 +64,14 @@ class EditClient extends EditRecord
             Actions\DeleteAction::make()->label('Deletar')->icon('heroicon-s-trash'),
         ];
     }
+
     protected function mutateFormDataBeforeSave(array $data): array
     {
 
-        UpdateUserClient::make(data:$data,userId:$this->record->user_id);
+        UpdateUserClient::make(data: $data, userId: $this->record->user_id);
+
         return $data;
     }
-
-
 
     protected function getSavedNotification(): ?Notification
     {

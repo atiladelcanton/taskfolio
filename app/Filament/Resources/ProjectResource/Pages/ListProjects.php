@@ -5,15 +5,14 @@ namespace App\Filament\Resources\ProjectResource\Pages;
 use App\Filament\Resources\ProjectResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
-use Filament\Tables\Actions\DeleteAction;
-use Filament\Tables\Actions\ViewAction;
-use Filament\Tables\Columns\IconColumn;
-use Filament\Tables\Columns\ToggleColumn;
-use Filament\Tables\Table;
 use Filament\Tables\Actions\BulkActionGroup;
+use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Actions\EditAction;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
+
 class ListProjects extends ListRecords
 {
     protected static string $resource = ProjectResource::class;
@@ -22,12 +21,12 @@ class ListProjects extends ListRecords
     {
         return [
             Actions\CreateAction::make()
-            ->label('Novo Projeto')
-            ->icon('heroicon-s-plus'),
+                ->label('Novo Projeto')
+                ->icon('heroicon-s-plus'),
         ];
     }
 
-    public  function table(Table $table): Table
+    public function table(Table $table): Table
     {
         return $table
             ->columns([
@@ -58,7 +57,7 @@ class ListProjects extends ListRecords
             ])
             ->actions([
                 EditAction::make()->label('Editar'),
-                DeleteAction::make()->label('Deletar')
+                DeleteAction::make()->label('Deletar'),
             ])
             ->bulkActions([
                 BulkActionGroup::make([

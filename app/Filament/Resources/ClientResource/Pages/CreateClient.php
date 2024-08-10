@@ -10,7 +10,6 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\CreateRecord;
-
 use Illuminate\Contracts\Support\Htmlable;
 use Leandrocfe\FilamentPtbrFormFields\PhoneNumber;
 use Rawilk\FilamentPasswordInput\Password;
@@ -23,6 +22,7 @@ class CreateClient extends CreateRecord
     {
         return 'Novo Cliente';
     }
+
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         $user = User::create([
@@ -31,6 +31,7 @@ class CreateClient extends CreateRecord
             'password' => bcrypt($data['password_user']),
         ]);
         $data['user_id'] = $user->id;
+
         return $data;
     }
 
@@ -64,8 +65,8 @@ class CreateClient extends CreateRecord
                             ->image()
                             ->avatar()
                             ->imageEditor()
-                            ->circleCropper()
-                    ])
+                            ->circleCropper(),
+                    ]),
             ]);
     }
 

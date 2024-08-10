@@ -4,9 +4,10 @@ namespace App\Filament\Resources\ProjectResource\Pages;
 
 use App\Filament\Resources\ProjectResource;
 use Filament\Actions;
-use Filament\Resources\Pages\ViewRecord;
 use Filament\Infolists;
 use Filament\Infolists\Infolist;
+use Filament\Resources\Pages\ViewRecord;
+
 class ViewProject extends ViewRecord
 {
     protected static string $resource = ProjectResource::class;
@@ -18,14 +19,14 @@ class ViewProject extends ViewRecord
         ];
     }
 
-    public  function infolist(Infolist $infolist): Infolist
+    public function infolist(Infolist $infolist): Infolist
     {
         return $infolist
             ->schema([
                 Infolists\Components\TextEntry::make('client.name')
-                ->label('Cliente'),
+                    ->label('Cliente'),
                 Infolists\Components\TextEntry::make('name')
-                ->label('Projeto'),
+                    ->label('Projeto'),
 
             ])->columns(4);
     }

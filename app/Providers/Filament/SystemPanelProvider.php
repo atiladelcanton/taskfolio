@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -81,7 +82,8 @@ class SystemPanelProvider extends PanelProvider
                 ActivitylogPlugin::make()
                     ->navigationGroup('Administrativo')
                     ->label('Log')
-                    ->pluralLabel('Logs')
+                    ->pluralLabel('Logs'),
+                FilamentShieldPlugin::make(),
             ])
             ->userMenuItems([
                 'profile' => MenuItem::make()

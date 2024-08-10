@@ -22,7 +22,8 @@ class ListClients extends ListRecords
             Actions\CreateAction::make()->label('Novo Cliente')->icon('heroicon-s-plus')->databaseTransaction(),
         ];
     }
-    public  function table(Table $table): Table
+
+    public function table(Table $table): Table
     {
         return $table
             ->columns([
@@ -50,7 +51,7 @@ class ListClients extends ListRecords
                 //
             ])
             ->actions([
-              EditAction::make()->label('Editar')->icon('heroicon-s-pencil'),
+                EditAction::make()->label('Editar')->icon('heroicon-s-pencil'),
             ])
             ->bulkActions([
                 BulkActionGroup::make([

@@ -4,12 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
+
 class Project extends Model
 {
     use HasFactory;
     use LogsActivity;
+
     protected $fillable = ['client_id', 'name', 'description', 'hours_month', 'hourly_rate', 'active'];
 
     protected $casts = [
@@ -17,6 +19,7 @@ class Project extends Model
         'hours_month' => 'integer',
         'hourly_rate' => 'float',
     ];
+
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()

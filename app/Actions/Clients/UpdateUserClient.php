@@ -6,7 +6,7 @@ use App\Models\User;
 
 class UpdateUserClient
 {
-    public static function make(array $data,int $userId)
+    public static function make(array $data, int $userId)
     {
 
         $user = User::find($userId);

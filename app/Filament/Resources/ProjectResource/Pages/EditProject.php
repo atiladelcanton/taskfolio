@@ -47,9 +47,10 @@ class EditProject extends EditRecord
                             ->required(),
                         Textarea::make('description')
                             ->columnSpanFull(),
-                    ])
+                    ]),
             ]);
     }
+
     protected function getHeaderActions(): array
     {
         return [
@@ -57,6 +58,7 @@ class EditProject extends EditRecord
             Actions\DeleteAction::make(),
         ];
     }
+
     protected function getSavedNotification(): ?Notification
     {
         return Notification::make()
