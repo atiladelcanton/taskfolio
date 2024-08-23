@@ -4,7 +4,6 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\CollaboratorResource\Pages;
 use App\Models\Collaborator;
-use App\Models\CollaboratorProject;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables\Actions\BulkActionGroup;
@@ -111,5 +110,4 @@ class CollaboratorResource extends Resource
     {
         return ['name', 'email'];
     }
-
 }

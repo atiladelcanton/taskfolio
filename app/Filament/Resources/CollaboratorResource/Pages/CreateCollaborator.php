@@ -5,7 +5,6 @@ namespace App\Filament\Resources\CollaboratorResource\Pages;
 use App\Filament\Resources\CollaboratorResource;
 use App\Filament\Services\UserService;
 use App\Models\Project;
-use DB;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -13,7 +12,6 @@ use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\CreateRecord;
 use Leandrocfe\FilamentPtbrFormFields\Money;
-use Mockery\Exception;
 
 class CreateCollaborator extends CreateRecord
 {
@@ -36,20 +34,20 @@ class CreateCollaborator extends CreateRecord
                             ->email()
                             ->required(),
 
-                      Select::make('projects')
+                        Select::make('projects')
                             ->relationship('projects', 'name')
-                          ->options(function () {
-                              return Project::query()
-                                  ->with('client')
-                                  ->get()
-                                  ->mapWithKeys(function ($project) {
-                                      return [$project->id => "{$project->client->name}: {$project->name}"];
-                                  });
-                          })
-                              ->label('Projetos')
-                              ->multiple()
-                              ->preload()
-                              ->required(),
+                            ->options(function () {
+                                return Project::query()
+                                    ->with('client')
+                                    ->get()
+                                    ->mapWithKeys(function ($project) {
+                                        return [$project->id => "{$project->client->name}: {$project->name}"];
+                                    });
+                            })
+                            ->label('Projetos')
+                            ->multiple()
+                            ->preload()
+                            ->required(),
                         Money::make('hourly_rate')
                             ->label('Preço por Hora')
                             ->required(),
@@ -63,13 +61,12 @@ class CreateCollaborator extends CreateRecord
     protected function mutateFormDataBeforeCreate(array $data): array
     {
 
-            $userService = new UserService();
-            $user = $userService->createUserCollaborato($data);
-            $data['user_id'] = $user->id;
-            return $data;
+        $userService = new UserService();
+        $user = $userService->createUserCollaborato($data);
+        $data['user_id'] = $user->id;
+
+        return $data;
     }
-
-
 
     protected function getHeaderActions(): array
     {
@@ -77,6 +74,7 @@ class CreateCollaborator extends CreateRecord
 
         ];
     }
+
     protected function getCreatedNotification(): ?Notification
     {
         return Notification::make()

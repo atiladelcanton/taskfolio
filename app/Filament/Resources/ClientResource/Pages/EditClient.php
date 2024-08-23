@@ -68,7 +68,9 @@ class EditClient extends EditRecord
     protected function mutateFormDataBeforeSave(array $data): array
     {
 
-        UpdateUserClient::make(data: $data, userId: $this->record->user_id);
+        if (! empty($this->record->user_id)) {
+            UpdateUserClient::make(data: $data, userId: $this->record->user_id);
+        }
 
         return $data;
     }

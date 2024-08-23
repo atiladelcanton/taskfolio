@@ -7,6 +7,17 @@ use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 
+/**
+ * @property int $id
+ * @property int $client_id
+ * @property string $name
+ * @property string $description
+ * @property int $hours_month
+ * @property float $hourly_rate
+ * @property bool $active
+ * @property Client $client
+ * @property Collaborator[] $collaborators
+ */
 class Project extends Model
 {
     use HasFactory;
@@ -28,13 +39,13 @@ class Project extends Model
             ->logOnly(['client_id', 'name', 'description', 'hours_month', 'hourly_rate', 'active']);
     }
 
-    public function client()
+    public function client(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Client::class);
     }
 
     public function collaborators()
     {
-        return $this->belongsToMany(Collaborator::class,'collaborator_projects')->withTimestamps();
+        return $this->belongsToMany(Collaborator::class, 'collaborator_projects')->withTimestamps();
     }
 }

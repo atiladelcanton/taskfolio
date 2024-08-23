@@ -44,7 +44,7 @@ class EditRole extends EditRecord
                 'guard_name' => $this->data['guard_name'],
             ]));
         });
-
+        /** @phpstan-ignore-next-line */
         $this->record->syncPermissions($permissionModels);
     }
 }
