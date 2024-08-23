@@ -34,6 +34,9 @@ class SystemPanelProvider extends PanelProvider
             ->id('system')
             ->path('system')
             ->login()
+            ->emailVerification()
+            ->passwordReset()
+            ->profile()
             ->colors([
                 'primary' => Color::Slate,
             ])
@@ -83,7 +86,21 @@ class SystemPanelProvider extends PanelProvider
                     ->navigationGroup('Administrativo')
                     ->label('Log')
                     ->pluralLabel('Logs'),
-                FilamentShieldPlugin::make(),
+                FilamentShieldPlugin::make()->gridColumns([
+                    'default' => 1,
+                    'sm' => 2,
+                    'lg' => 3,
+                ])
+                    ->sectionColumnSpan(1)
+                    ->checkboxListColumns([
+                        'default' => 1,
+                        'sm' => 2,
+                        'lg' => 4,
+                    ])
+                    ->resourceCheckboxListColumns([
+                        'default' => 1,
+                        'sm' => 2,
+                    ]),
             ])
             ->userMenuItems([
                 'profile' => MenuItem::make()

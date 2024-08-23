@@ -20,6 +20,8 @@ class Project extends Model
         'hourly_rate' => 'float',
     ];
 
+    protected $with = ['client'];
+
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
@@ -29,5 +31,10 @@ class Project extends Model
     public function client()
     {
         return $this->belongsTo(Client::class);
+    }
+
+    public function collaborators()
+    {
+        return $this->belongsToMany(Collaborator::class,'collaborator_projects')->withTimestamps();
     }
 }
