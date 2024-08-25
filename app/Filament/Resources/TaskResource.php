@@ -30,7 +30,7 @@ class TaskResource extends Resource
 
     protected static ?string $slug = 'tasks';
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'carbon-task';
 
     public static function form(Form $form): Form
     {
