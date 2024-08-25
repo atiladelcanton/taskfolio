@@ -4,12 +4,15 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     public function up(): void
     {
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
             $table->foreignId('project_id');
+            $table->string('task_code');
+            $table->integer('task_id')->nullable();
             $table->integer('priority')->comment('1 - Low, 2 - Medium, 3 - High');
             $table->integer('type')->comment('1 - Bug, 2 - Feature');
             $table->string('name');

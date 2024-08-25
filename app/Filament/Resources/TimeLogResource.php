@@ -2,8 +2,8 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\SprintResource\Pages;
-use App\Models\Sprint;
+use App\Filament\Resources\TimeLogResource\Pages;
+use App\Models\TimeLog;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Select;
@@ -25,11 +25,11 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class SprintResource extends Resource
+class TimeLogResource extends Resource
 {
-    protected static ?string $model = Sprint::class;
+    protected static ?string $model = TimeLog::class;
 
-    protected static ?string $slug = 'sprints';
+    protected static ?string $slug = 'time-logs';
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -39,23 +39,29 @@ class SprintResource extends Resource
             ->schema([
                 Placeholder::make('created_at')
                     ->label('Created Date')
-                    ->content(fn (?Sprint $record): string => $record?->created_at?->diffForHumans() ?? '-'),
+                    ->content(fn (?TimeLog $record): string => $record?->created_at?->diffForHumans() ?? '-'),
 
                 Placeholder::make('updated_at')
                     ->label('Last Modified Date')
-                    ->content(fn (?Sprint $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
+                    ->content(fn (?TimeLog $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
 
-                Select::make('project_id')
-                    ->relationship('project', 'name')
+                Select::make('task_id')
+                    ->relationship('task', 'name')
                     ->searchable()
                     ->required(),
 
-                TextInput::make('name')
+                Select::make('collaborator_id')
+                    ->relationship('collaborator', 'name')
+                    ->searchable()
                     ->required(),
 
-                DatePicker::make('start_date'),
+                TextInput::make('action')
+                    ->required()
+                    ->integer(),
 
-                DatePicker::make('end_date'),
+                DatePicker::make('time_start'),
+
+                DatePicker::make('time_end'),
             ]);
     }
 
@@ -63,18 +69,20 @@ class SprintResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('project.name')
+                TextColumn::make('task.name')
                     ->searchable()
                     ->sortable(),
 
-                TextColumn::make('name')
+                TextColumn::make('collaborator.name')
                     ->searchable()
                     ->sortable(),
 
-                TextColumn::make('start_date')
+                TextColumn::make('action'),
+
+                TextColumn::make('time_start')
                     ->date(),
 
-                TextColumn::make('end_date')
+                TextColumn::make('time_end')
                     ->date(),
             ])
             ->filters([
@@ -98,9 +106,9 @@ class SprintResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListSprints::route('/'),
-            'create' => Pages\CreateSprint::route('/create'),
-            'edit' => Pages\EditSprint::route('/{record}/edit'),
+            'index' => Pages\ListTimeLogs::route('/'),
+            'create' => Pages\CreateTimeLog::route('/create'),
+            'edit' => Pages\EditTimeLog::route('/{record}/edit'),
         ];
     }
 
@@ -114,20 +122,24 @@ class SprintResource extends Resource
 
     public static function getGlobalSearchEloquentQuery(): Builder
     {
-        return parent::getGlobalSearchEloquentQuery()->with(['project']);
+        return parent::getGlobalSearchEloquentQuery()->with(['task', 'collaborator']);
     }
 
     public static function getGloballySearchableAttributes(): array
     {
-        return ['name', 'project.name'];
+        return ['task.name', 'collaborator.name'];
     }
 
     public static function getGlobalSearchResultDetails(Model $record): array
     {
         $details = [];
 
-        if ($record->project) {
-            $details['Project'] = $record->project->name;
+        if ($record->task) {
+            $details['Task'] = $record->task->name;
+        }
+
+        if ($record->collaborator) {
+            $details['Collaborator'] = $record->collaborator->name;
         }
 
         return $details;

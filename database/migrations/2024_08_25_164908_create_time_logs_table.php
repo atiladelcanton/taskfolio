@@ -8,10 +8,13 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('tasks_sprints', function (Blueprint $table) {
+        Schema::create('time_logs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('sprint_id');
             $table->foreignId('task_id');
+            $table->foreignId('collaborator_id');
+            $table->integer('action');
+            $table->dateTime('time_start');
+            $table->dateTime('time_end');
             $table->softDeletes();
             $table->timestamps();
         });
@@ -19,6 +22,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('tasks_sprints');
+        Schema::dropIfExists('time_logs');
     }
 };

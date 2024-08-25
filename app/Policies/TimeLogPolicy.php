@@ -2,11 +2,11 @@
 
 namespace App\Policies;
 
-use App\Models\Sprint;
+use App\Models\TimeLog;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class SprintPolicy
+class TimeLogPolicy
 {
     use HandlesAuthorization;
 
@@ -15,15 +15,15 @@ class SprintPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->can('view_any_sprint');
+        return $user->can('view_any_time_log');
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Sprint $sprint): bool
+    public function view(User $user, TimeLog $timeLog): bool
     {
-        return $user->can('view_sprint');
+        return $user->can('view_time_log');
     }
 
     /**
@@ -31,23 +31,23 @@ class SprintPolicy
      */
     public function create(User $user): bool
     {
-        return $user->can('create_sprint');
+        return $user->can('create_time_log');
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Sprint $sprint): bool
+    public function update(User $user, TimeLog $timeLog): bool
     {
-        return $user->can('update_sprint');
+        return $user->can('update_time_log');
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Sprint $sprint): bool
+    public function delete(User $user, TimeLog $timeLog): bool
     {
-        return $user->can('delete_sprint');
+        return $user->can('delete_time_log');
     }
 
     /**
@@ -55,15 +55,15 @@ class SprintPolicy
      */
     public function deleteAny(User $user): bool
     {
-        return $user->can('delete_any_sprint');
+        return $user->can('delete_any_time_log');
     }
 
     /**
      * Determine whether the user can permanently delete.
      */
-    public function forceDelete(User $user, Sprint $sprint): bool
+    public function forceDelete(User $user, TimeLog $timeLog): bool
     {
-        return $user->can('force_delete_sprint');
+        return $user->can('force_delete_time_log');
     }
 
     /**
@@ -71,15 +71,15 @@ class SprintPolicy
      */
     public function forceDeleteAny(User $user): bool
     {
-        return $user->can('force_delete_any_sprint');
+        return $user->can('force_delete_any_time_log');
     }
 
     /**
      * Determine whether the user can restore.
      */
-    public function restore(User $user, Sprint $sprint): bool
+    public function restore(User $user, TimeLog $timeLog): bool
     {
-        return $user->can('restore_sprint');
+        return $user->can('restore_time_log');
     }
 
     /**
@@ -87,15 +87,15 @@ class SprintPolicy
      */
     public function restoreAny(User $user): bool
     {
-        return $user->can('restore_any_sprint');
+        return $user->can('restore_any_time_log');
     }
 
     /**
      * Determine whether the user can replicate.
      */
-    public function replicate(User $user, Sprint $sprint): bool
+    public function replicate(User $user, TimeLog $timeLog): bool
     {
-        return $user->can('replicate_sprint');
+        return $user->can('replicate_time_log');
     }
 
     /**
@@ -103,6 +103,6 @@ class SprintPolicy
      */
     public function reorder(User $user): bool
     {
-        return $user->can('reorder_sprint');
+        return $user->can('reorder_time_log');
     }
 }

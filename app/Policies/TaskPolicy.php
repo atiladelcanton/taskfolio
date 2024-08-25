@@ -2,7 +2,7 @@
 
 namespace App\Policies;
 
-use App\Models\task;
+use App\Models\Task;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -21,7 +21,7 @@ class TaskPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, task $task): bool
+    public function view(User $user, Task $task): bool
     {
         return $user->can('view_task');
     }
@@ -37,7 +37,7 @@ class TaskPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, task $task): bool
+    public function update(User $user, Task $task): bool
     {
         return $user->can('update_task');
     }
@@ -45,7 +45,7 @@ class TaskPolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, task $task): bool
+    public function delete(User $user, Task $task): bool
     {
         return $user->can('delete_task');
     }
@@ -61,7 +61,7 @@ class TaskPolicy
     /**
      * Determine whether the user can permanently delete.
      */
-    public function forceDelete(User $user, task $task): bool
+    public function forceDelete(User $user, Task $task): bool
     {
         return $user->can('force_delete_task');
     }
@@ -77,7 +77,7 @@ class TaskPolicy
     /**
      * Determine whether the user can restore.
      */
-    public function restore(User $user, task $task): bool
+    public function restore(User $user, Task $task): bool
     {
         return $user->can('restore_task');
     }
@@ -93,7 +93,7 @@ class TaskPolicy
     /**
      * Determine whether the user can replicate.
      */
-    public function replicate(User $user, task $task): bool
+    public function replicate(User $user, Task $task): bool
     {
         return $user->can('replicate_task');
     }

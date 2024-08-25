@@ -9,10 +9,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Task extends Model
 {
-    use SoftDeletes, HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'project_id',
+        'task_id',
         'name',
         'description',
         'status',
@@ -22,5 +23,10 @@ class Task extends Model
     public function project(): BelongsTo
     {
         return $this->belongsTo(Project::class);
+    }
+
+    public function subtasks(): BelongsTo
+    {
+        return $this->belongsTo(Task::class, 'task_id');
     }
 }

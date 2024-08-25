@@ -38,11 +38,11 @@ class TaskResource extends Resource
             ->schema([
                 Placeholder::make('created_at')
                     ->label('Created Date')
-                    ->content(fn(?Task $record): string => $record?->created_at?->diffForHumans() ?? '-'),
+                    ->content(fn (?Task $record): string => $record?->created_at?->diffForHumans() ?? '-'),
 
                 Placeholder::make('updated_at')
                     ->label('Last Modified Date')
-                    ->content(fn(?Task $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
+                    ->content(fn (?Task $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
 
                 Select::make('project_id')
                     ->relationship('project', 'name')
