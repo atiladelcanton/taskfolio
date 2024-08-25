@@ -4,22 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\TaskResource\Pages;
 use App\Models\Task;
-use Filament\Forms\Components\Placeholder;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables\Actions\BulkActionGroup;
-use Filament\Tables\Actions\DeleteAction;
-use Filament\Tables\Actions\DeleteBulkAction;
-use Filament\Tables\Actions\EditAction;
-use Filament\Tables\Actions\ForceDeleteAction;
-use Filament\Tables\Actions\ForceDeleteBulkAction;
-use Filament\Tables\Actions\RestoreAction;
-use Filament\Tables\Actions\RestoreBulkAction;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Filters\TrashedFilter;
-use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -30,76 +15,7 @@ class TaskResource extends Resource
 
     protected static ?string $slug = 'tasks';
 
-    protected static ?string $navigationIcon = 'carbon-task';
-
-    public static function form(Form $form): Form
-    {
-        return $form
-            ->schema([
-                Placeholder::make('created_at')
-                    ->label('Created Date')
-                    ->content(fn (?Task $record): string => $record?->created_at?->diffForHumans() ?? '-'),
-
-                Placeholder::make('updated_at')
-                    ->label('Last Modified Date')
-                    ->content(fn (?Task $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
-
-                Select::make('project_id')
-                    ->relationship('project', 'name')
-                    ->searchable()
-                    ->required(),
-
-                TextInput::make('name')
-                    ->required(),
-
-                TextInput::make('description')
-                    ->required(),
-
-                TextInput::make('status')
-                    ->required()
-                    ->integer(),
-
-                TextInput::make('total_hours')
-                    ->required()
-                    ->numeric(),
-            ]);
-    }
-
-    public static function table(Table $table): Table
-    {
-        return $table
-            ->columns([
-                TextColumn::make('project.name')
-                    ->searchable()
-                    ->sortable(),
-
-                TextColumn::make('name')
-                    ->searchable()
-                    ->sortable(),
-
-                TextColumn::make('description'),
-
-                TextColumn::make('status'),
-
-                TextColumn::make('total_hours'),
-            ])
-            ->filters([
-                TrashedFilter::make(),
-            ])
-            ->actions([
-                EditAction::make(),
-                DeleteAction::make(),
-                RestoreAction::make(),
-                ForceDeleteAction::make(),
-            ])
-            ->bulkActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                    RestoreBulkAction::make(),
-                    ForceDeleteBulkAction::make(),
-                ]),
-            ]);
-    }
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function getPages(): array
     {
@@ -120,12 +36,12 @@ class TaskResource extends Resource
 
     public static function getGlobalSearchEloquentQuery(): Builder
     {
-        return parent::getGlobalSearchEloquentQuery()->with(['project']);
+        return parent::getGlobalSearchEloquentQuery()->with(['project', 'tasks']);
     }
 
     public static function getGloballySearchableAttributes(): array
     {
-        return ['name', 'project.name'];
+        return ['name', 'project.name', 'tasks.name'];
     }
 
     public static function getGlobalSearchResultDetails(Model $record): array
@@ -134,6 +50,10 @@ class TaskResource extends Resource
 
         if ($record->project) {
             $details['Project'] = $record->project->name;
+        }
+
+        if ($record->tasks) {
+            $details['Tasks'] = $record->tasks->name;
         }
 
         return $details;
