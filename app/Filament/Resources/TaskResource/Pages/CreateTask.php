@@ -13,10 +13,14 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Pages\CreateRecord;
+use Filament\Resources\RelationManagers\RelationManager;
+use JetBrains\PhpStorm\NoReturn;
 
 class CreateTask extends CreateRecord
 {
     protected static string $resource = TaskResource::class;
+
+
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
@@ -28,6 +32,7 @@ class CreateTask extends CreateRecord
 
         return $data;
     }
+
 
     public function form(Form $form): Form
     {
@@ -46,9 +51,15 @@ class CreateTask extends CreateRecord
                                         return [$project->id => "{$project->client->name}: {$project->name}"];
                                     });
                             })
-                            ->label('Projeto')
+                            ->label('tasks_id')
                             ->preload()
                             ->required(),
+                        Select::make('store_id')
+                            ->options(function (RelationManager $livewire): array {
+                                return $livewire->getOwnerRecord()->stores()
+                                    ->pluck('name', 'id')
+                                    ->toArray();
+                            }),
                         Select::make('priority')
                             ->label('Prioridade')
                             ->required()
@@ -56,7 +67,7 @@ class CreateTask extends CreateRecord
                             ->searchable()
                             ->options([
                                 1 => '<span class="text-green-500">Baixa</span>',
-                                2 => '<span class="text-custom-600">Media</span>',
+                                2 => '<span style="color: rgb(245 158 11);">Media</span>',
                                 3 => '<span class="text-danger-600">Alta</span>',
                             ]),
                         Select::make('type')
@@ -104,14 +115,14 @@ class CreateTask extends CreateRecord
                             ->columnSpanFull(),
                     ]),
 
-                Repeater::make('evidencies')
+                FileUpload::make('evidences')
                     ->label('Evidencias')
-                    ->relationship('evidencies')
-                    ->schema([
-                        FileUpload::make('filename')
-                            ->directory('tasks'),
-                    ])
-                    ->columnSpan('full'),
+                    ->multiple()
+                    ->loadingIndicatorPosition('left')
+                    ->panelLayout('integrated')
+                    ->panelLayout('grid')
+                    ->columnSpanFull()
+                    ->directory('tasks'),
             ]);
     }
 
@@ -120,5 +131,9 @@ class CreateTask extends CreateRecord
         return [
 
         ];
+    }
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
     }
 }

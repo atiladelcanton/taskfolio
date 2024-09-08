@@ -11,11 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('evidence_tasks', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('task_id')->constrained();
-            $table->string('filename')->nullable();
-            $table->timestamps();
+        Schema::table('tasks', function (Blueprint $table) {
+            $table->string('evidences')->nullable();
         });
     }
 
@@ -24,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('evidence_tasks');
+        Schema::table('tasks', function (Blueprint $table) {
+            $table->dropColumn('evidences');
+        });
     }
 };

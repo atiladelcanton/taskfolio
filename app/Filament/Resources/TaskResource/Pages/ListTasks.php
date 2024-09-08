@@ -60,16 +60,33 @@ class ListTasks extends ListRecords
                 TextColumn::make('name')
                     ->searchable()
                     ->sortable(),
-                TextColumn::make('priority'),
-                TextColumn::make('type'),
-                TextColumn::make('status')
+                TextColumn::make('priority')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
-                        'Backlog' => 'gray',
-                        'Em Andamento' => 'info',
-                        'Validação' => 'warning',
-                        'Concluído' => 'success',
-                        'Correção' => 'danger',
+                        '1' => 'gray',
+                        '2' => 'warning',
+                        '3' => 'danger',
+                    })
+                    ->formatStateUsing(function ($state) {
+                        return match ($state) {
+                            1 => 'Baixa',
+                            2 => 'Média',
+                            3 => 'Alta',
+                            default => 'Desconhecida',
+                        };
+                    }),
+                TextColumn::make('type')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        '2' => 'gray',
+                        '1' => 'warning',
+                    })
+                    ->formatStateUsing(function ($state) {
+                        return match ($state) {
+                            1 => 'Bug',
+                            2 => 'Feature',
+                            default => 'Desconhecida',
+                        };
                     }),
                 TextColumn::make('total_hours'),
             ])

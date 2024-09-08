@@ -36,6 +36,9 @@ class SystemPanelProvider extends PanelProvider
             ->login()
             ->emailVerification()
             ->passwordReset()
+            ->brandLogo('/img/logo.png')
+            ->brandLogoHeight('6rem')
+
             ->profile()
             ->colors([
                 'primary' => Color::Slate,
