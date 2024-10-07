@@ -54,6 +54,7 @@ class ListTasks extends ListRecords
             ->columns([
                 TextColumn::make('task_code')
                     ->searchable(),
+                TextColumn::make('taskFather.name')->label('Tarefa Pai')->searchable(),
                 TextColumn::make('project.name')
                     ->searchable()
                     ->sortable(),

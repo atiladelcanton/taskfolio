@@ -30,4 +30,9 @@ class Sprint extends Model
             'end_date' => 'date',
         ];
     }
+
+    public function tasks()
+    {
+        return $this->hasMany(TasksSprint::class,'sprint_id','id');
+    }
 }

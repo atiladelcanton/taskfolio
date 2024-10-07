@@ -49,6 +49,7 @@ class EditSprint extends EditRecord
 
     public function form(Form $form): Form
     {
+
         return $form
             ->schema([
                 Section::make()

@@ -4,6 +4,7 @@ namespace App\Filament\Resources\TaskResource\Pages;
 
 use App\Filament\Resources\TaskResource;
 use App\Models\Project;
+use App\Models\Task;
 use App\Support\Helper;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\MarkdownEditor;
@@ -20,14 +21,13 @@ class CreateTask extends CreateRecord
 {
     protected static string $resource = TaskResource::class;
 
-
-
     protected function mutateFormDataBeforeCreate(array $data): array
     {
 
         $project = Project::find($data['project_id']);
 
         $data['task_code'] = Helper::generateTaskCode($project->client->name);
+        $data['order'] = Task::query()->max('order') + 1;
         $data['total_hours'] = 0.0;
 
         return $data;
@@ -51,15 +51,10 @@ class CreateTask extends CreateRecord
                                         return [$project->id => "{$project->client->name}: {$project->name}"];
                                     });
                             })
-                            ->label('tasks_id')
+                            ->label('Projeto')
                             ->preload()
                             ->required(),
-                        Select::make('store_id')
-                            ->options(function (RelationManager $livewire): array {
-                                return $livewire->getOwnerRecord()->stores()
-                                    ->pluck('name', 'id')
-                                    ->toArray();
-                            }),
+
                         Select::make('priority')
                             ->label('Prioridade')
                             ->required()
@@ -90,6 +85,11 @@ class CreateTask extends CreateRecord
                                 4 => 'Correção',
                                 5 => 'Concluído',
                             ]),
+                        Select::make('task_id')
+                            ->relationship('taskFather', 'name',ignoreRecord: true)
+                            ->label('Task Parent')
+                            ->searchable()
+                            ->preload(),
                         TextInput::make('name')
                             ->label('Titulo da Tarefa')
                             ->required()

@@ -78,6 +78,13 @@ class EditTask extends EditRecord
                                 4 => 'Correção',
                                 5 => 'Concluído',
                             ]),
+                        Select::make('task_id')
+                            ->relationship('taskFather', 'name')
+
+                            ->label('Task Parent')
+                            ->searchable()
+                            ->preload()
+                            ->required(),
                         TextInput::make('name')
                             ->label('Titulo da Tarefa')
                             ->required()
