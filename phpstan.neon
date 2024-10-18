@@ -1,0 +1,10 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+
+parameters:
+    paths:
+        - app/
+    excludePaths:
+      - %currentWorkingDirectory%/app/Filament/Resources/Shield/RoleResource.php
+      - %currentWorkingDirectory%/app/Filament/Resources/Shield/RoleResource/Pages/CreateRole.php
+    level: 5
