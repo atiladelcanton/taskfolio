@@ -32,7 +32,8 @@ class SystemPanelProvider extends PanelProvider
         return $panel
             ->default()
             ->id('system')
-            ->path('system')
+            ->path('/')
+            ->brand('/img/logo.png')
             ->login()
             ->emailVerification()
             ->passwordReset()
