@@ -24,7 +24,7 @@ class CollaboratorResource extends Resource
 {
     protected static ?string $model = Collaborator::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'lineawesome-snowboarding-solid';
 
     protected static ?string $modelLabel = 'Colaborador';
 

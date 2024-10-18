@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "67572bacf15ede0e1eaa5aa7861c90df",
+    "content-hash": "0816a0a6013aa047940a079e2ff7b0cf",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -436,6 +436,150 @@
                 }
             ],
             "time": "2023-12-11T17:09:12+00:00"
+        },
+        {
+            "name": "codeat3/blade-carbon-icons",
+            "version": "2.28.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/codeat3/blade-carbon-icons.git",
+                "reference": "e512754f4640862f01262497fbfb58eb35563504"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/codeat3/blade-carbon-icons/zipball/e512754f4640862f01262497fbfb58eb35563504",
+                "reference": "e512754f4640862f01262497fbfb58eb35563504",
+                "shasum": ""
+            },
+            "require": {
+                "blade-ui-kit/blade-icons": "^1.1",
+                "illuminate/support": "^8.0|^9.0|^10.0|^11.0",
+                "php": "^7.4|^8.0"
+            },
+            "require-dev": {
+                "codeat3/blade-icon-generation-helpers": "^0.8",
+                "codeat3/phpcs-styles": "^1.0",
+                "orchestra/testbench": "^6.0|^7.0|^8.0|^9.0",
+                "phpunit/phpunit": "^9.0|^10.5|^11.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Codeat3\\BladeCarbonIcons\\BladeCarbonIconsServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Codeat3\\BladeCarbonIcons\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Swapnil Sarwe",
+                    "homepage": "https://swapnilsarwe.com"
+                },
+                {
+                    "name": "Dries Vints",
+                    "homepage": "https://driesvints.com"
+                }
+            ],
+            "description": "A package to easily make use of Carbon Icons in your Laravel Blade views.",
+            "homepage": "https://github.com/codeat3/blade-carbon-icons",
+            "keywords": [
+                "blade",
+                "carbon-icons",
+                "icons",
+                "laravel"
+            ],
+            "support": {
+                "issues": "https://github.com/codeat3/blade-carbon-icons/issues",
+                "source": "https://github.com/codeat3/blade-carbon-icons/tree/2.28.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/swapnilsarwe",
+                    "type": "github"
+                }
+            ],
+            "time": "2024-07-01T13:19:18+00:00"
+        },
+        {
+            "name": "codeat3/blade-line-awesome-icons",
+            "version": "1.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/codeat3/blade-line-awesome-icons.git",
+                "reference": "159ca505d88a0d964d6c136b2dbd0a007387667b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/codeat3/blade-line-awesome-icons/zipball/159ca505d88a0d964d6c136b2dbd0a007387667b",
+                "reference": "159ca505d88a0d964d6c136b2dbd0a007387667b",
+                "shasum": ""
+            },
+            "require": {
+                "blade-ui-kit/blade-icons": "^1.1",
+                "illuminate/support": "^8.0|^9.0|^10.0|^11.0",
+                "php": "^7.4|^8.0"
+            },
+            "require-dev": {
+                "codeat3/blade-icon-generation-helpers": "^0.8",
+                "codeat3/phpcs-styles": "^1.0",
+                "orchestra/testbench": "^6.0|^7.0|^8.0|^9.0",
+                "phpunit/phpunit": "^9.0|^10.5|^11.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Codeat3\\BladeLineAwesomeIcons\\BladeLineAwesomeIconsServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Codeat3\\BladeLineAwesomeIcons\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Swapnil Sarwe",
+                    "homepage": "https://swapnilsarwe.com"
+                },
+                {
+                    "name": "Dries Vints",
+                    "homepage": "https://driesvints.com"
+                }
+            ],
+            "description": "A package to easily make use of Line Awesome Icons in your Laravel Blade views.",
+            "homepage": "https://github.com/codeat3/blade-line-awesome-icons",
+            "keywords": [
+                "blade",
+                "icons",
+                "laravel",
+                "line-awesome"
+            ],
+            "support": {
+                "issues": "https://github.com/codeat3/blade-line-awesome-icons/issues",
+                "source": "https://github.com/codeat3/blade-line-awesome-icons/tree/1.4.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/swapnilsarwe",
+                    "type": "github"
+                }
+            ],
+            "time": "2024-02-28T15:15:14+00:00"
         },
         {
             "name": "danharrin/date-format-converter",
