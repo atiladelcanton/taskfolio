@@ -83,8 +83,7 @@ class EditTask extends EditRecord
 
                             ->label('Task Parent')
                             ->searchable()
-                            ->preload()
-                            ->required(),
+                            ->preload(),
                         TextInput::make('name')
                             ->label('Titulo da Tarefa')
                             ->required()

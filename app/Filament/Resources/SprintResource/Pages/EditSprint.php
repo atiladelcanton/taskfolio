@@ -35,17 +35,7 @@ class EditSprint extends EditRecord
         return 'Novo Sprint';
     }
 
-    protected function mutateFormDataBeforeSave(array $data): array
-    {
-        $dateStart = Carbon::createFromFormat('d/m/Y', $data['start_date']);
-        $dateEnd = Carbon::createFromFormat('d/m/Y', $data['end_date']);
-
-        $data['start_date'] = $dateStart->format('Y-m-d');
-        $data['end_date'] = $dateEnd->format('Y-m-d');
-
-        return $data;
-
-    }
+  
 
     public function form(Form $form): Form
     {
