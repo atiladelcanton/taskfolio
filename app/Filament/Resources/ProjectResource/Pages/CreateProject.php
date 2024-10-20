@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\ProjectResource\Pages;
 
+use App\Actions\Task\CreateDefaultTask;
 use App\Filament\Resources\ProjectResource;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
@@ -16,6 +17,11 @@ use Leandrocfe\FilamentPtbrFormFields\Money;
 class CreateProject extends CreateRecord
 {
     protected static string $resource = ProjectResource::class;
+
+    protected function afterCreate(): void
+    {
+        CreateDefaultTask::handle($this->record->id);
+    }
 
     public function form(Form $form): Form
     {
