@@ -12,6 +12,7 @@ class Task extends Model
 
     protected $fillable = [
         'project_id',
+        'colaborator_id',
         'task_id',
         'task_code',
         'priority',
@@ -21,8 +22,9 @@ class Task extends Model
         'status',
         'total_hours',
         'evidences',
-        'order'
+        'order',
     ];
+
     protected $casts = [
         'evidences' => 'array',
     ];
@@ -37,14 +39,20 @@ class Task extends Model
         return $this->belongsTo(Task::class, 'task_id');
     }
 
-    public function taskFather(): BelongsTo
-    {
-        return $this->belongsTo(Task::class, 'id','task_id')->whereNull('task_id');
-    }
+
+
     public function sprint()
     {
-        return $this->belongsToMany(TasksSprint::class,'sprint_tasks','task_id','sprint_id');
+        return $this->belongsToMany(TasksSprint::class, 'sprint_tasks', 'task_id', 'sprint_id');
     }
 
+    public function colaborator(): BelongsTo
+    {
+        return $this->belongsTo(Collaborator::class, 'colaborator_id');
+    }
 
+    public function colaboratorsByProject()
+    {
+        return $this->hasMany(CollaboratorProject::class, 'project_id','project_id');
+    }
 }

@@ -29,16 +29,6 @@ class Collaborator extends Model
         'hourly_rate' => 'float',
     ];
 
-    protected static function boot(): void
-    {
-        parent::boot();
-        static::deleted(function ($collaborator) {
-            $collaborator->user?->delete();
-            $collaborator->projects()?->delete();
-        });
-
-    }
-
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
@@ -46,12 +36,21 @@ class Collaborator extends Model
 
     public function projects()
     {
-        return $this->belongsToMany(Project::class, 'collaborator_projects')->withTimestamps();
+        return $this->belongsToMany(Project::class, 'collaborator_projects')
+            ->withTimestamps();
     }
 
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
             ->logOnly(['user_id', 'name', 'email', 'hourly_rate', 'pix', 'bank_name']);
+    }
+
+    protected static function boot(): void
+    {
+        parent::boot();
+        static::deleted(function ($collaborator) {
+            $collaborator->user?->delete();
+        });
     }
 }

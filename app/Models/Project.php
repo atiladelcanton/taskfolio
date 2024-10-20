@@ -31,14 +31,6 @@ class Project extends Model
         'hourly_rate' => 'float',
     ];
 
-    protected $with = ['client'];
-
-    public function getActivitylogOptions(): LogOptions
-    {
-        return LogOptions::defaults()
-            ->logOnly(['client_id', 'name', 'description', 'hours_month', 'hourly_rate', 'active']);
-    }
-
     public function client(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Client::class);
@@ -46,6 +38,13 @@ class Project extends Model
 
     public function collaborators()
     {
-        return $this->belongsToMany(Collaborator::class, 'collaborator_projects')->withTimestamps();
+        return $this->belongsToMany(Collaborator::class, 'collaborator_projects')
+            ->withTimestamps();
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['client_id', 'name', 'description', 'hours_month', 'hourly_rate', 'active']);
     }
 }

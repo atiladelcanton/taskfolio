@@ -4,6 +4,7 @@ namespace App\Filament\Resources\TaskResource\Pages;
 
 use App\Filament\Clusters\Tasks;
 use App\Filament\Resources\TaskResource;
+use App\Models\Collaborator;
 use App\Models\Task;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Components\Tab;
@@ -16,6 +17,7 @@ use Filament\Tables\Actions\ForceDeleteAction;
 use Filament\Tables\Actions\ForceDeleteBulkAction;
 use Filament\Tables\Actions\RestoreAction;
 use Filament\Tables\Actions\RestoreBulkAction;
+use Filament\Tables\Columns\SelectColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
@@ -50,11 +52,14 @@ class ListTasks extends ListRecords
 
     public function table(Table $table): Table
     {
+
         return $table
             ->columns([
                 TextColumn::make('task_code')
+                    ->label('Código Task')
                     ->searchable(),
-                TextColumn::make('taskFather.name')->label('Tarefa Pai')->searchable(),
+                TextColumn::make('colaborator.name')
+                ->label('Colaborador'),
                 TextColumn::make('project.name')
                     ->searchable()
                     ->sortable(),

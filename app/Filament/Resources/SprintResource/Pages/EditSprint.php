@@ -4,7 +4,6 @@ namespace App\Filament\Resources\SprintResource\Pages;
 
 use App\Filament\Resources\SprintResource;
 use App\Models\Project;
-use Carbon\Carbon;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\ForceDeleteAction;
 use Filament\Actions\RestoreAction;
@@ -27,15 +26,13 @@ class EditSprint extends EditRecord
 
     public function getTitle(): string|Htmlable
     {
-        return 'Novo Sprint';
+        return 'Editar Sprint';
     }
 
     public function getBreadcrumb(): string
     {
-        return 'Novo Sprint';
+        return 'Editar Sprint';
     }
-
-  
 
     public function form(Form $form): Form
     {
