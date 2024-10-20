@@ -38,9 +38,13 @@ class SystemPanelProvider extends PanelProvider
             ->login()
             ->emailVerification()
             ->passwordReset()
+            ->brandLogo('/img/logo.png')
+            ->brandLogoHeight('6rem')
+
             ->profile()
             ->colors([
                 'primary' => Color::Slate,
+                'yellow' => Color::Yellow,
             ])
             ->globalSearchKeyBindings(['command+k', 'ctrl+k'])
             ->globalSearchFieldSuffix(fn (): ?string => match (Platform::detect()) {
@@ -51,6 +55,7 @@ class SystemPanelProvider extends PanelProvider
             ->maxContentWidth(MaxWidth::Full)
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
+            ->discoverClusters(in: app_path('Filament/Clusters'), for: 'App\\Filament\\Clusters')
             ->pages([
                 Pages\Dashboard::class,
             ])

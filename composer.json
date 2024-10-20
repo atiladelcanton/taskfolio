@@ -7,6 +7,9 @@
     "require": {
         "php": "^8.2",
         "bezhansalleh/filament-shield": "^3.2",
+        "blade-ui-kit/blade-heroicons": "^2.4",
+        "codeat3/blade-carbon-icons": "^2.28",
+        "codeat3/blade-line-awesome-icons": "^1.4",
         "filament/filament": "^3.2",
         "joaopaulolndev/filament-edit-profile": "^1.0",
         "laravel/framework": "^11.9",
