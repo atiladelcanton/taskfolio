@@ -15,7 +15,7 @@ class TimeLogPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->can('view_any_time_log');
+        return $user->can('view_any_time::log');
     }
 
     /**
@@ -23,7 +23,7 @@ class TimeLogPolicy
      */
     public function view(User $user, TimeLog $timeLog): bool
     {
-        return $user->can('view_time_log');
+        return $user->can('view_time::log');
     }
 
     /**
@@ -31,7 +31,7 @@ class TimeLogPolicy
      */
     public function create(User $user): bool
     {
-        return $user->can('create_time_log');
+        return $user->can('create_time::log');
     }
 
     /**
@@ -39,7 +39,7 @@ class TimeLogPolicy
      */
     public function update(User $user, TimeLog $timeLog): bool
     {
-        return $user->can('update_time_log');
+        return $user->can('update_time::log');
     }
 
     /**
@@ -47,7 +47,7 @@ class TimeLogPolicy
      */
     public function delete(User $user, TimeLog $timeLog): bool
     {
-        return $user->can('delete_time_log');
+        return $user->can('delete_time::log');
     }
 
     /**
@@ -55,7 +55,7 @@ class TimeLogPolicy
      */
     public function deleteAny(User $user): bool
     {
-        return $user->can('delete_any_time_log');
+        return $user->can('delete_any_time::log');
     }
 
     /**
@@ -63,7 +63,7 @@ class TimeLogPolicy
      */
     public function forceDelete(User $user, TimeLog $timeLog): bool
     {
-        return $user->can('force_delete_time_log');
+        return $user->can('force_delete_time::log');
     }
 
     /**
@@ -71,7 +71,7 @@ class TimeLogPolicy
      */
     public function forceDeleteAny(User $user): bool
     {
-        return $user->can('force_delete_any_time_log');
+        return $user->can('force_delete_any_time::log');
     }
 
     /**
@@ -79,7 +79,7 @@ class TimeLogPolicy
      */
     public function restore(User $user, TimeLog $timeLog): bool
     {
-        return $user->can('restore_time_log');
+        return $user->can('restore_time::log');
     }
 
     /**
@@ -87,7 +87,7 @@ class TimeLogPolicy
      */
     public function restoreAny(User $user): bool
     {
-        return $user->can('restore_any_time_log');
+        return $user->can('restore_any_time::log');
     }
 
     /**
@@ -95,7 +95,7 @@ class TimeLogPolicy
      */
     public function replicate(User $user, TimeLog $timeLog): bool
     {
-        return $user->can('replicate_time_log');
+        return $user->can('replicate_time::log');
     }
 
     /**
@@ -103,6 +103,6 @@ class TimeLogPolicy
      */
     public function reorder(User $user): bool
     {
-        return $user->can('reorder_time_log');
+        return $user->can('reorder_time::log');
     }
 }

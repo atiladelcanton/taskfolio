@@ -57,6 +57,7 @@ class ListSprints extends ListRecords
             ->actions([
                 EditAction::make(),
                 DeleteAction::make(),
+
                 RestoreAction::make(),
                 ForceDeleteAction::make(),
             ])
@@ -72,7 +73,7 @@ class ListSprints extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make()->label('Novo Sprint')->icon('heroicon-s-plus'),
+            CreateAction::make(),
         ];
     }
 }

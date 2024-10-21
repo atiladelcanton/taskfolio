@@ -11,11 +11,14 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\CreateRecord;
+use JetBrains\PhpStorm\NoReturn;
 use Leandrocfe\FilamentPtbrFormFields\Money;
 
 class CreateCollaborator extends CreateRecord
 {
     protected static string $resource = CollaboratorResource::class;
+
+    private array $selectedProjects = [];
 
     public function form(Form $form): Form
     {
@@ -35,7 +38,6 @@ class CreateCollaborator extends CreateRecord
                             ->required(),
 
                         Select::make('projects')
-                            ->relationship('projects', 'name')
                             ->options(function () {
                                 return Project::query()
                                     ->with('client')
@@ -60,12 +62,29 @@ class CreateCollaborator extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
+        $projects = $data['projects'] ?? [];
+        unset($data['projects']);
 
         $userService = new UserService();
         $user = $userService->createUserCollaborato($data);
         $data['user_id'] = $user->id;
+        $this->selectedProjects = $projects;
 
         return $data;
+    }
+
+    #[NoReturn]
+    protected function afterCreate(): void
+    {
+        if (! empty($this->selectedProjects)) {
+            foreach ($this->selectedProjects as $projectId) {
+                \App\Models\CollaboratorProject::create([
+                    'id' => \Illuminate\Support\Str::uuid(),
+                    'collaborator_id' => $this->record->id,
+                    'project_id' => $projectId,
+                ]);
+            }
+        }
     }
 
     protected function getHeaderActions(): array

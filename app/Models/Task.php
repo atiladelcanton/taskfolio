@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 
 class Task extends Model
 {
@@ -12,7 +13,7 @@ class Task extends Model
 
     protected $fillable = [
         'project_id',
-        'colaborator_id',
+        'collaborator_id',
         'task_id',
         'task_code',
         'priority',
@@ -24,6 +25,17 @@ class Task extends Model
         'evidences',
         'order',
     ];
+
+    protected $keyType = 'string';
+
+    public $incrementing = false;
+
+    public static function booted()
+    {
+        static::creating(function ($model) {
+            $model->id = Str::uuid();
+        });
+    }
 
     protected $casts = [
         'evidences' => 'array',
@@ -39,20 +51,18 @@ class Task extends Model
         return $this->belongsTo(Task::class, 'task_id');
     }
 
-
-
     public function sprint()
     {
         return $this->belongsToMany(TasksSprint::class, 'sprint_tasks', 'task_id', 'sprint_id');
     }
 
-    public function colaborator(): BelongsTo
+    public function collaborator(): BelongsTo
     {
-        return $this->belongsTo(Collaborator::class, 'colaborator_id');
+        return $this->belongsTo(Collaborator::class);
     }
 
     public function colaboratorsByProject()
     {
-        return $this->hasMany(CollaboratorProject::class, 'project_id','project_id');
+        return $this->hasMany(CollaboratorProject::class, 'project_id', 'project_id');
     }
 }

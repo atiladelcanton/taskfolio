@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 
 class Sprint extends Model
 {
@@ -20,6 +21,10 @@ class Sprint extends Model
         'default_sprint',
     ];
 
+    protected $keyType = 'string';
+
+    public $incrementing = false;
+
     public function project(): BelongsTo
     {
         return $this->belongsTo(Project::class);
@@ -27,7 +32,7 @@ class Sprint extends Model
 
     public function tasks(): HasMany
     {
-        return $this->hasMany(TasksSprint::class, 'sprint_id', 'id');
+        return $this->hasMany(Task::class, 'sprint_id', 'id');
     }
 
     protected function casts(): array
@@ -37,5 +42,12 @@ class Sprint extends Model
             'end_date' => 'date',
             'default_sprint' => 'boolean',
         ];
+    }
+
+    public static function booted()
+    {
+        static::creating(function ($model) {
+            $model->id = Str::uuid();
+        });
     }
 }

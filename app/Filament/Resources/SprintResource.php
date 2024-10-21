@@ -3,63 +3,61 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\SprintResource\Pages;
+use App\Filament\Resources\SprintResource\RelationManagers\TasksRelationManager;
 use App\Models\Sprint;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Tables;
+use Filament\Tables\Table;
 
 class SprintResource extends Resource
 {
     protected static ?string $model = Sprint::class;
 
-    protected static ?string $slug = 'sprints';
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $modelLabel = 'Sprint';
+    public static function form(Form $form): Form
+    {
+        return $form
+            ->schema([
+                //
+            ]);
+    }
 
-    protected static ?string $pluralModelLabel = 'Sprints';
+    public static function table(Table $table): Table
+    {
+        return $table
+            ->columns([
+                //
+            ])
+            ->filters([
+                //
+            ])
+            ->actions([
+                Tables\Actions\ViewAction::make(),
+                Tables\Actions\EditAction::make(),
+            ])
+            ->bulkActions([
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                ]),
+            ]);
+    }
 
-    protected static ?string $navigationLabel = 'Sprint';
-
-    protected static ?string $pluralLabel = 'Sprints';
-
-    protected static ?string $navigationIcon = 'heroicon-o-clock';
+    public static function getRelations(): array
+    {
+        return [
+            TasksRelationManager::class,
+        ];
+    }
 
     public static function getPages(): array
     {
         return [
             'index' => Pages\ListSprints::route('/'),
             'create' => Pages\CreateSprint::route('/create'),
+            'view' => Pages\ViewSprint::route('/{record}'),
             'edit' => Pages\EditSprint::route('/{record}/edit'),
         ];
-    }
-
-    public static function getEloquentQuery(): Builder
-    {
-        return parent::getEloquentQuery()
-            ->withoutGlobalScopes([
-                SoftDeletingScope::class,
-            ]);
-    }
-
-    public static function getGlobalSearchEloquentQuery(): Builder
-    {
-        return parent::getGlobalSearchEloquentQuery()->with(['project']);
-    }
-
-    public static function getGloballySearchableAttributes(): array
-    {
-        return ['name', 'project.name'];
-    }
-
-    public static function getGlobalSearchResultDetails(Model $record): array
-    {
-        $details = [];
-
-        if ($record->project) {
-            $details['Project'] = $record->project->name;
-        }
-
-        return $details;
     }
 }

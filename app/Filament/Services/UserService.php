@@ -15,7 +15,7 @@ class UserService
 {
     public function createUserCollaborato(array $data): User
     {
-        // my logics you don't need it
+
         $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],

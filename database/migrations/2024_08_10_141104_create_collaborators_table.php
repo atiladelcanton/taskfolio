@@ -9,9 +9,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('collaborators', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->string('name');
-            $table->foreignId('user_id');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('email');
             $table->decimal('hourly_rate');
             $table->string('pix')->nullable();

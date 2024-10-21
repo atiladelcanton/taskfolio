@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 
@@ -30,6 +31,17 @@ class Project extends Model
         'hours_month' => 'integer',
         'hourly_rate' => 'float',
     ];
+
+    protected $keyType = 'string';
+
+    public $incrementing = false;
+
+    public static function booted(): void
+    {
+        static::creating(function ($model) {
+            $model->id = Str::uuid();
+        });
+    }
 
     public function client(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
