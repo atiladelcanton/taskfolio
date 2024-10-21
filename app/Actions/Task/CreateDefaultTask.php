@@ -6,7 +6,7 @@ use App\Models\Sprint;
 
 class CreateDefaultTask
 {
-    public static function handle(int $projectId): void
+    public static function handle(string $projectId): void
     {
         Sprint::create([
             'project_id' => $projectId,
