@@ -32,7 +32,10 @@ class EditSprint extends EditRecord
     {
         return 'Editar Sprint';
     }
-
+    protected function getSaveFormAction(): \Filament\Actions\Action
+    {
+        return parent::getSaveFormAction()->visible(fn () => !auth()->user()->hasRole('Colaboradores'));
+    }
     public function form(Form $form): Form
     {
 
@@ -53,22 +56,26 @@ class EditSprint extends EditRecord
                             })
                             ->label('Projeto')
                             ->preload()
-                            ->required(),
+                            ->required()
+                            ->disabled(auth()->user()->hasRole('Colaboradores')),
                         TextInput::make('name')
                             ->label('Nome do Sprint')
-                            ->required(),
+                            ->required()->readOnly(auth()->user()->hasRole('Colaboradores')),
                         DatePicker::make('start_date')
                             ->label('Inicio do Sprint')->format('d/m/Y')
                             ->minDate(now())
                             ->reactive()
-                            ->required(),
+                            ->required()
+                    ->readOnly(auth()->user()->hasRole('Colaboradores')),
                         DatePicker::make('end_date')
                             ->label('Fim do Sprint')->format('d/m/Y')
                             ->minDate(fn (callable $get) => $get('start_date'))
-                            ->required(),
+                            ->required()
+                        ->readOnly(auth()->user()->hasRole('Colaboradores')),
                     ]),
             ]);
     }
+
 
     protected function getHeaderActions(): array
     {

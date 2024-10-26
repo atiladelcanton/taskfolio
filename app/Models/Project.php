@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\CollaboratorProjects;
+use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
@@ -19,6 +21,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
  * @property Client $client
  * @property Collaborator[] $collaborators
  */
+
 class Project extends Model
 {
     use HasFactory;
@@ -59,4 +62,5 @@ class Project extends Model
         return LogOptions::defaults()
             ->logOnly(['client_id', 'name', 'description', 'hours_month', 'hourly_rate', 'active']);
     }
+
 }

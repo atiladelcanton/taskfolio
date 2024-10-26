@@ -67,4 +67,5 @@ class EditCollaborator extends EditRecord
                     ]),
             ]);
     }
+
 }

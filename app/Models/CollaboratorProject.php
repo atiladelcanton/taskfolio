@@ -8,26 +8,18 @@ use Illuminate\Support\Str;
 
 class CollaboratorProject extends Model
 {
-    public $incrementing = false;
-
     protected $keyType = 'string';
+    public $incrementing = false;
+    protected $primaryKey = null;
 
-    protected $fillable = ['id', 'collaborator_id', 'project_id'];
+    protected $fillable = [
+        'collaborator_id',
+        'project_id',
+    ];
 
-    protected static function booted(): void
+
+    public function projects()
     {
-        static::creating(function ($model) {
-            $model->id = $model->id ?? Str::uuid();
-        });
-    }
-
-    public function collaborator(): BelongsTo
-    {
-        return $this->belongsTo(Collaborator::class);
-    }
-
-    public function project(): BelongsTo
-    {
-        return $this->belongsTo(Project::class);
+        return $this->belongsToMany(Project::class);
     }
 }

@@ -67,35 +67,20 @@ class TasksRelationManager extends RelationManager
                                 ->panelLayout('integrated')
                                 ->panelLayout('grid')
                                 ->columnSpanFull()
-                                ->directory('tasks'),
+                                ->directory('tasks')
+                                ->downloadable(true),
                         ])->grow(),
                     Section::make('')
                         ->schema([
-                            Select::make('project_id')
-                                ->options(function () {
-                                    return Project::query()
-                                        ->with('client')
-                                        ->get()
-                                        ->mapWithKeys(function ($project) {
-                                            return [$project->id => "{$project->client->name}: {$project->name}"];
-                                        });
-                                })
-                                ->live()
+                           TextInput::make('project_id')
                                 ->label('Projeto')
-                                ->preload()
-                                ->required(),
+                               ->readOnly(true)
+                               ->default(Project::find($this->ownerRecord->project_id)->name),
                             Select::make('collaborator_id')
                                 ->label('Colaborador')
-                                ->placeholder(function (Get $get) {
 
-                                    return $get('project_id') ? 'Selecione o Colaborador' : 'Selecione o projeto primeiro';
-                                })
-                                ->disabled(function (Get $get) {
-
-                                    return $get('project_id') ? false : true;
-                                })
                                 ->options(fn (Get $get
-                                ) => $get('project_id') ? Project::with('collaborators')->find($get('project_id'))->collaborators()->get()->pluck('name',
+                                ) => $get('project_id') ? Project::with('collaborators')->find($this->ownerRecord->project_id)->collaborators()->get()->pluck('name',
                                     'id') : [])
                                 ->searchable()
                                 ->preload(),
@@ -118,22 +103,12 @@ class TasksRelationManager extends RelationManager
                                     1 => '<span class="text-danger-600">Bug</span>',
                                     2 => '<span class="text-green-500">Feature</span>',
                                 ]),
-                            Select::make('status')
-                                ->label('Status')
-                                ->required()
-                                ->searchable()
-                                ->options([
-                                    1 => 'Backlog',
-                                    2 => 'Em Andamento',
-                                    3 => 'Validação',
-                                    4 => 'Correção',
-                                    5 => 'Concluído',
-                                ]),
+
+
 
                         ])->grow(false),
                 ]),
             ])
-
             ->columns(1);
     }
 
@@ -142,19 +117,19 @@ class TasksRelationManager extends RelationManager
         return [
             '1' => Tab::make('Backlog')
                 ->modifyQueryUsing(fn (Builder $query) => $query->whereStatus(1))
-                ->badge(Task::query()->whereStatus(1)->count()),
+                ->badge(Task::query()->whereStatus(1)->where('project_id', $this->ownerRecord->project_id)->count()),
             '2' => Tab::make('Em Andamento')
                 ->modifyQueryUsing(fn (Builder $query) => $query->whereStatus(2))
-                ->badge(Task::query()->whereStatus(2)->count()),
+                ->badge(Task::query()->whereStatus(2)->where('project_id', $this->ownerRecord->project_id)->count()),
             '3' => Tab::make('Validação')
                 ->modifyQueryUsing(fn (Builder $query) => $query->whereStatus(3))
-                ->badge(Task::query()->whereStatus(3)->count()),
+                ->badge(Task::query()->whereStatus(3)->where('project_id', $this->ownerRecord->project_id)->count()),
             '4' => Tab::make('Correção')
                 ->modifyQueryUsing(fn (Builder $query) => $query->whereStatus(4))
-                ->badge(Task::query()->whereStatus(4)->count()),
+                ->badge(Task::query()->whereStatus(4)->where('project_id', $this->ownerRecord->project_id)->count()),
             '5' => Tab::make('Completo')
                 ->modifyQueryUsing(fn (Builder $query) => $query->whereStatus(5))
-                ->badge(Task::query()->whereStatus(5)->count()),
+                ->badge(Task::query()->whereStatus(5)->where('project_id', $this->ownerRecord->project_id)->count()),
         ];
     }
 
@@ -189,7 +164,15 @@ class TasksRelationManager extends RelationManager
                             3 => 'Alta',
                             default => 'Desconhecida',
                         };
-                    }),
+                    })
+                ->icon(function ($state) {
+                    return match ($state) {
+                        1 => 'lineawesome-arrow-down-solid',
+                        2 => 'lineawesome-long-arrow-alt-right-solid',
+                        3 => 'lineawesome-long-arrow-alt-up-solid',
+                        default => 'lineawesome-question-circle-solid',
+                    };
+                }),
                 TextColumn::make('type')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
@@ -210,9 +193,12 @@ class TasksRelationManager extends RelationManager
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make()->modalWidth(MaxWidth::FiveExtraLarge)
+                    ->label('Nova Tarefa')
                     ->mutateFormDataUsing(function (array $data): array {
-                        $project = Project::find($data['project_id']);
 
+                        $project = Project::find($this->ownerRecord->project_id);
+                        $data['status'] = 1;
+                        $data['project_id'] = $this->ownerRecord->project_id;
                         $data['task_code'] = Helper::generateTaskCode($project->client->name);
                         $data['order'] = Task::query()->max('order') + 1;
                         $data['total_hours'] = 0.0;
@@ -230,4 +216,8 @@ class TasksRelationManager extends RelationManager
                 ]),
             ]);
     }
+
+
+
+
 }

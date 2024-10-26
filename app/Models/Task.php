@@ -6,11 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class Task extends Model
 {
     use SoftDeletes;
-
+    use LogsActivity;
     protected $fillable = [
         'project_id',
         'collaborator_id',
@@ -25,7 +27,21 @@ class Task extends Model
         'evidences',
         'order',
     ];
-
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly([  'project_id',
+                'collaborator_id',
+                'task_id',
+                'task_code',
+                'priority',
+                'type',
+                'name',
+                'description',
+                'status',
+                'total_hours',
+                'evidences']);
+    }
     protected $keyType = 'string';
 
     public $incrementing = false;

@@ -39,7 +39,7 @@ class SprintPolicy
      */
     public function update(User $user, Sprint $sprint): bool
     {
-        return $user->can('update_sprint');
+        return $user->can('update_sprint') || !auth()->user()->hasRole('Colaboradores');
     }
 
     /**

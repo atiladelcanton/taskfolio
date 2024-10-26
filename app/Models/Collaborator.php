@@ -48,8 +48,7 @@ class Collaborator extends Model
 
     public function projects()
     {
-        return $this->belongsToMany(Project::class, 'collaborator_projects')
-            ->withTimestamps();
+        return $this->belongsToMany(Project::class, 'collaborator_projects');
     }
 
     public function getActivitylogOptions(): LogOptions

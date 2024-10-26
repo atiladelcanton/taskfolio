@@ -15,7 +15,7 @@ class TaskPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->can('view_any_task');
+        return $user->can('view_any_task') ||  $user->hasRole('Colaboradores');
     }
 
     /**
@@ -23,7 +23,7 @@ class TaskPolicy
      */
     public function view(User $user, Task $task): bool
     {
-        return $user->can('view_task');
+        return $user->can('view_task') ||  $user->hasRole('Colaboradores');
     }
 
     /**
@@ -31,7 +31,7 @@ class TaskPolicy
      */
     public function create(User $user): bool
     {
-        return $user->can('create_task');
+        return $user->can('create_task') ||  $user->hasRole('Colaboradores');
     }
 
     /**
@@ -39,7 +39,7 @@ class TaskPolicy
      */
     public function update(User $user, Task $task): bool
     {
-        return $user->can('update_task');
+        return $user->can('update_task') ||  $user->hasRole('Colaboradores');
     }
 
     /**
@@ -47,7 +47,7 @@ class TaskPolicy
      */
     public function delete(User $user, Task $task): bool
     {
-        return $user->can('delete_task');
+        return $user->can('delete_task') ||  $user->hasRole('Colaboradores');
     }
 
     /**
@@ -55,7 +55,7 @@ class TaskPolicy
      */
     public function deleteAny(User $user): bool
     {
-        return $user->can('delete_any_task');
+        return $user->can('delete_any_task') ||  $user->hasRole('Colaboradores');
     }
 
     /**
@@ -63,7 +63,7 @@ class TaskPolicy
      */
     public function forceDelete(User $user, Task $task): bool
     {
-        return $user->can('force_delete_task');
+        return $user->can('force_delete_task') ||  $user->hasRole('Colaboradores');
     }
 
     /**
@@ -71,7 +71,7 @@ class TaskPolicy
      */
     public function forceDeleteAny(User $user): bool
     {
-        return $user->can('force_delete_any_task');
+        return $user->can('force_delete_any_task') ||  $user->hasRole('Colaboradores');
     }
 
     /**
@@ -79,7 +79,7 @@ class TaskPolicy
      */
     public function restore(User $user, Task $task): bool
     {
-        return $user->can('restore_task');
+        return $user->can('restore_task') ||  $user->hasRole('Colaboradores');
     }
 
     /**
@@ -87,7 +87,7 @@ class TaskPolicy
      */
     public function restoreAny(User $user): bool
     {
-        return $user->can('restore_any_task');
+        return $user->can('restore_any_task') ||  $user->hasRole('Colaboradores');
     }
 
     /**
@@ -95,7 +95,7 @@ class TaskPolicy
      */
     public function replicate(User $user, Task $task): bool
     {
-        return $user->can('replicate_task');
+        return $user->can('replicate_task') ||  $user->hasRole('Colaboradores');
     }
 
     /**
@@ -103,6 +103,6 @@ class TaskPolicy
      */
     public function reorder(User $user): bool
     {
-        return $user->can('reorder_task');
+        return $user->can('reorder_task') ||  $user->hasRole('Colaboradores');
     }
 }
