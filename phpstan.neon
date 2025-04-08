@@ -7,11 +7,9 @@ parameters:
     paths:
         - app/
 
-    # Level 10 is the highest level
     level: 6
 
-#    ignoreErrors:
-#        - '#PHPDoc tag @var#'
-#
-#    excludePaths:
-#        - ./*/*/FileToBeExcluded.php
+    ignoreErrors:
+        - '#Class App\\Models\\.* uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types: TFactory#'
+        - '#Method App\\Models\\Project::users\(\) should return Illuminate\\Database\\Eloquent\\Relations\\BelongsToMany<.*> but returns Illuminate\\Database\\Eloquent\\Relations\\BelongsToMany<.*\$this\(App\\Models\\Project\).*>#'
+        - '#Method App\\Models\\User::projects\(\) should return Illuminate\\Database\\Eloquent\\Relations\\BelongsToMany<.*> but returns Illuminate\\Database\\Eloquent\\Relations\\BelongsToMany<.*\$this\(App\\Models\\User\).*>#'

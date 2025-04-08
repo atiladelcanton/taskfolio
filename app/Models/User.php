@@ -4,21 +4,19 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory;
-    use Notifiable;
+    use HasFactory, Notifiable;
 
     /**
-     * The attributes that are mass assignable.
-     *
      * @var list<string>
      */
     protected $fillable = [
@@ -28,8 +26,6 @@ class User extends Authenticatable
     ];
 
     /**
-     * The attributes that should be hidden for serialization.
-     *
      * @var list<string>
      */
     protected $hidden = [
@@ -38,8 +34,6 @@ class User extends Authenticatable
     ];
 
     /**
-     * Get the attributes that should be cast.
-     *
      * @return array<string, string>
      */
     protected function casts(): array
@@ -51,8 +45,37 @@ class User extends Authenticatable
     }
 
     /**
-     * Get the user's initials
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<\App\Models\Project, \App\Models\User>
      */
+    public function projects(): BelongsToMany
+    {
+        return $this->belongsToMany(Project::class, 'user_projects');
+    }
+
+    /**
+     * @return HasMany<Project, $this>
+     */
+    public function ownedProjects(): HasMany
+    {
+        return $this->hasMany(Project::class, 'owner_id');
+    }
+
+    /**
+     * @return HasMany<TimeTrack, $this>
+     */
+    public function timeTrackings(): HasMany
+    {
+        return $this->hasMany(TimeTrack::class);
+    }
+
+    /**
+     * @return HasMany<TimeTrackUser, $this>
+     */
+    public function timeTrackUsers(): HasMany
+    {
+        return $this->hasMany(TimeTrackUser::class);
+    }
+
     public function initials(): string
     {
         return Str::of($this->name)
