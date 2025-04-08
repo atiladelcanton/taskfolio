@@ -9,7 +9,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Sprint extends Model
 {
     use HasFactory;
-
+    protected $fillable = [
+        'sprint_code',
+        'project_id',
+        'name',
+        'date_start',
+        'date_end',
+        'status',
+    ];
     public function project(): BelongsTo
     {
         return $this->belongsTo(Project::class);
