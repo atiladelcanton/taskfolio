@@ -6,7 +6,6 @@ namespace Database\Factories;
 
 use App\Models\{Project, Sprint};
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Carbon;
 
 class SprintFactory extends Factory
 {
@@ -14,16 +13,16 @@ class SprintFactory extends Factory
 
     public function definition(): array
     {
-        return [
-            'sprint_code' => $this->faker->word(),
-            'name' => $this->faker->name(),
-            'date_start' => Carbon::now(),
-            'date_end' => Carbon::now(),
-            'status' => $this->faker->word(),
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now(),
+        $startDate = fake()->dateTimeBetween('now', '+30 days');
+        $endDate = fake()->dateTimeBetween($startDate, '+30 days');
 
+        return [
+            'sprint_code' => 'SPR-'.fake()->unique()->numerify('####'),
             'project_id' => Project::factory(),
+            'name' => 'Sprint '.fake()->unique()->numerify('##'),
+            'date_start' => $startDate,
+            'date_end' => $endDate,
+            'status' => fake()->randomElement(['ongoing', 'completed', 'pending']),
         ];
     }
 }
