@@ -11,7 +11,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Evidence extends Model
 {
     use HasFactory;
+
     protected $table = 'evidences';
+
     protected $fillable = [
         'task_id',
         'name',
