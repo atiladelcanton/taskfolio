@@ -1,24 +1,24 @@
 <?php
 
-declare(strict_types=1);
+use App\Livewire\Auth\Register;
 use App\Models\User;
-use Illuminate\Auth\Events\Registered;
-use Illuminate\Support\Facades\{Event, Notification};
+use Livewire\Livewire;
 
-beforeEach(function () {
-    Event::fake([Registered::class]);
-});
-
-test('novos usuários podem se registrar', function () {
-    Notification::fake();
-
-    $response = $this->post('/register', [
-        'name' => 'Test User',
+test('novos usuários podem se registrar via livewire', function () {
+    // Teste o componente Livewire
+    $component = Livewire::test(Register::class)
+        ->set('name', 'Test User')
+        ->set('email', 'test@example.com')
+        ->set('password', 'password')
+        ->set('password_confirmation', 'password')
+        ->call('register');
+    
+    // Verifica se o usuário foi criado no banco de dados
+    $this->assertDatabaseHas('users', [
         'email' => 'test@example.com',
-        'password' => 'password',
-        'password_confirmation' => 'password',
+        'name' => 'Test User'
     ]);
-
-    $user = User::where('email', 'test@example.com')->first();
-    $this->assertNotNull($user);
+    
+    // Verifica redirecionamento para a página de verificação
+    $component->assertRedirect(route('verification.notice'));
 });

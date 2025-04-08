@@ -4,23 +4,25 @@ declare(strict_types=1);
 
 namespace App\Livewire\Auth;
 
-use App\Models\User;
-use Illuminate\Auth\Events\Registered;
-use Illuminate\Support\Facades\{Auth, Hash};
+use App\Domain\User\Actions\RegisterUserAction;
 use Illuminate\Validation\Rules;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
-
+use App\Domain\User\DTOs\UserData;
 #[Layout('components.layouts.auth')]
 class Register extends Component
 {
     public string $name = '';
-
     public string $email = '';
-
     public string $password = '';
-
     public string $password_confirmation = '';
+    
+    protected $registerUserAction;
+    
+    public function boot(RegisterUserAction $registerUserAction)
+    {
+        $this->registerUserAction = $registerUserAction;
+    }
 
     /**
      * Handle an incoming registration request.
@@ -29,16 +31,18 @@ class Register extends Component
     {
         $validated = $this->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        $validated['password'] = Hash::make($validated['password']);
+        $userData = new UserData(
+            name: $validated['name'],
+            email: $validated['email'],
+            password: $validated['password'],
+        );
+        $this->registerUserAction->execute($userData);
 
-        event(new Registered(($user = User::create($validated))));
-
-        Auth::login($user);
-
-        $this->redirect(route('dashboard', absolute: false), navigate: true);
+  
+        $this->redirect(route('verification.notice', absolute: false), navigate: true);
     }
 }

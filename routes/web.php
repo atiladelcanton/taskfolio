@@ -8,13 +8,16 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', fn () => view('welcome'))->name('home');
 
-Route::view('dashboard', 'dashboard')
-    ->middleware(['auth', 'verified'])
-    ->name('dashboard');
 
 Route::middleware('guest')->group(function () {
     Route::post('register', [RegisterController::class, 'register']);
 });
+
+Route::view('dashboard', 'dashboard')
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
+
+
 
 Route::middleware(['auth'])->group(function (): void {
     Route::redirect('settings', 'settings/profile');
