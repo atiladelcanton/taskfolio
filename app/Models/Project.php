@@ -6,10 +6,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\Pivot;
+use Illuminate\Database\Eloquent\Relations\{BelongsTo, BelongsToMany, HasMany};
 
 class Project extends Model
 {
@@ -29,13 +26,15 @@ class Project extends Model
     {
         return $this->belongsTo(User::class, 'owner_id');
     }
+
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<\App\Models\User, \App\Models\Project>
+     * @return BelongsToMany<User, Project>
      */
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'user_projects');
     }
+
     /**
      * @return HasMany<Sprint, $this>
      */
