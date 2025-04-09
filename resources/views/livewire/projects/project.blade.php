@@ -16,7 +16,7 @@
         <div class="overflow-x-auto">
             @if(count($projects) === 0)
                 <flux:heading level="3" class="flex items-center justify-center flex-col">
-                    <flux:icon.bolt  class="size-12"/>
+                    <flux:icon.bolt class="size-12"/>
                     Nenhum projeto, localizado ou voce nao criou nenhum projeto
                 </flux:heading>
             @else
@@ -31,7 +31,8 @@
                     <flux:table.rows>
                         @foreach ($projects as $project)
                             <flux:table.row wire:key="project-{{ $project->id }}"
-                                            class="hover:bg-gray-50 dark:hover:bg-slate-800 hover:cursor-pointer">
+                                            class="hover:bg-gray-50 dark:hover:bg-slate-800 hover:cursor-pointer"
+                            >
                                 <flux:table.cell variant="strong">
                                     <div class="flex items-center">
                                         <div
@@ -39,9 +40,13 @@
                                             <flux:icon name="folder" class="h-5 w-5"/>
                                         </div>
                                         <div class="ml-3">
-                                            <div class="font-medium text-gray-900 dark:text-white">{{$project->name}}</div>
-                                            <div
-                                                class="text-sm text-gray-500 dark:text-slate-300">{{$project->project_code}}</div>
+                                            <a href="{{ route('sprints.index', $project->project_code) }}">
+                                                <div class="font-medium text-gray-900 dark:text-white">
+
+                                                    {{$project->name}}</div>
+                                                <div
+                                                    class="text-sm text-gray-500 dark:text-slate-300">{{$project->project_code}}</div>
+                                            </a>
                                         </div>
                                     </div>
                                 </flux:table.cell>
@@ -50,7 +55,8 @@
                                 </flux:table.cell>
                                 <flux:table.cell>
                                     <div class="flex items-center">
-                                        <span class="text-sm font-semibold">{{ $project->sprints()->count() ?? 0 }}</span>
+                                        <span
+                                            class="text-sm font-semibold">{{ $project->sprints()->count() ?? 0 }}</span>
                                     </div>
                                 </flux:table.cell>
                                 <flux:table.cell>
@@ -70,8 +76,10 @@
                                     <flux:dropdown>
                                         <flux:button icon:trailing="chevron-down">Opcoes</flux:button>
                                         <flux:menu>
-                                            <flux:menu.item icon="pencil-square" wire:click="editProject({{ $project->id }})"
-                                                            class="cursor-pointer">Editar</flux:menu.item>
+                                            <flux:menu.item icon="pencil-square"
+                                                            wire:click="editProject({{ $project->id }})"
+                                                            class="cursor-pointer">Editar
+                                            </flux:menu.item>
 
 
                                             <flux:menu.item icon="trash" variant="danger"
