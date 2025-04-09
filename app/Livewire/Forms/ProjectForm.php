@@ -12,9 +12,9 @@ use Livewire\Form;
 class ProjectForm extends Form
 {
     #[Validate('required|min:5')]
-    public $name = '';
+    public string $name = '';
 
-    public $description = '';
+    public string $description = '';
 
     public function store(): Project
     {
@@ -28,7 +28,7 @@ class ProjectForm extends Form
         ]);
     }
 
-    public function update(array|Project|_IH_Project_C|null $project): void
+    public function update(Project $project): void
     {
         $project->update(['name' => $this->name,
             'description' => $this->description, ]);

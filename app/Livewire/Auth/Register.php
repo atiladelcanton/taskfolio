@@ -21,9 +21,9 @@ class Register extends Component
 
     public string $password_confirmation = '';
 
-    protected $registerUserAction;
+    protected RegisterUserAction $registerUserAction;
 
-    public function boot(RegisterUserAction $registerUserAction)
+    public function boot(RegisterUserAction $registerUserAction): void
     {
         $this->registerUserAction = $registerUserAction;
     }

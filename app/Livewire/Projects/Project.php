@@ -8,6 +8,8 @@ use App\Livewire\Forms\ProjectForm;
 use App\Models\Project as ProjectModel;
 use Auth;
 use Flux\Flux;
+use Illuminate\Contracts\View\View;
+use Illuminate\Foundation\Application;
 use Livewire\Attributes\{Layout, Title};
 use Livewire\Component;
 
@@ -17,11 +19,11 @@ class Project extends Component
 {
     public ProjectForm $projectForm;
 
-    public $searchTerm = '';
+    public string $searchTerm = '';
 
-    public $projectId = 0;
+    public string|int $projectId = 0;
 
-    public function render()
+    public function render(): View|Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
     {
         $projects = ProjectModel::query()
             ->when($this->searchTerm, function ($q) {
@@ -50,7 +52,7 @@ class Project extends Component
         return $this->redirect(route('projects.index'), navigate: true);
     }
 
-    public function editProject(string $id)
+    public function editProject(string $id): void
     {
         $this->projectId = (int) $id;
         $project = ProjectModel::find($id);
@@ -58,7 +60,7 @@ class Project extends Component
         $this->modal('new-project')->show();
     }
 
-    public function updateProject()
+    public function updateProject(): void
     {
         $project = ProjectModel::find($this->projectId);
         $this->projectForm->update($project);
