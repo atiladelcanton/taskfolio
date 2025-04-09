@@ -1,7 +1,8 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Livewire\Auth\Register;
-use App\Models\User;
 use Livewire\Livewire;
 
 test('novos usuários podem se registrar via livewire', function () {
@@ -12,13 +13,13 @@ test('novos usuários podem se registrar via livewire', function () {
         ->set('password', 'password')
         ->set('password_confirmation', 'password')
         ->call('register');
-    
+
     // Verifica se o usuário foi criado no banco de dados
     $this->assertDatabaseHas('users', [
         'email' => 'test@example.com',
-        'name' => 'Test User'
+        'name' => 'Test User',
     ]);
-    
+
     // Verifica redirecionamento para a página de verificação
     $component->assertRedirect(route('verification.notice'));
 });
