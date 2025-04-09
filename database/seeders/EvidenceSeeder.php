@@ -1,10 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Seeders;
 
-use App\Models\Evidence;
-use App\Models\Task;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\{Evidence, Task};
 use Illuminate\Database\Seeder;
 use Random\RandomException;
 
@@ -12,6 +12,7 @@ class EvidenceSeeder extends Seeder
 {
     /**
      * Run the database seeds.
+     *
      * @throws RandomException
      */
     public function run(): void
@@ -25,12 +26,12 @@ class EvidenceSeeder extends Seeder
             for ($i = 0; $i < $evidenceCount; $i++) {
                 $fileTypes = ['pdf', 'doc', 'jpg', 'png', 'xls'];
                 $fileType = $fileTypes[array_rand($fileTypes)];
-                $fileName = 'evidence_' . fake()->word() . '.' . $fileType;
+                $fileName = 'evidence_'.fake()->word().'.'.$fileType;
 
                 Evidence::create([
                     'task_id' => $task->id,
                     'name' => $fileName,
-                    'url' => fake()->url() . '/' . $fileName,
+                    'url' => fake()->url().'/'.$fileName,
                 ]);
             }
         }

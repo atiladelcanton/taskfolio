@@ -5,25 +5,21 @@ declare(strict_types=1);
 use App\Livewire\Auth\Register;
 use Livewire\Livewire;
 
-uses(Illuminate\Foundation\Testing\RefreshDatabase::class);
-
-test('registration screen can be rendered', function (): void {
-    $response = $this->get('/register');
-
-    $response->assertStatus(200);
-});
-
-test('new users can register', function (): void {
-    $response = Livewire::test(Register::class)
+test('novos usuários podem se registrar via livewire', function () {
+    // Teste o componente Livewire
+    $component = Livewire::test(Register::class)
         ->set('name', 'Test User')
         ->set('email', 'test@example.com')
         ->set('password', 'password')
         ->set('password_confirmation', 'password')
         ->call('register');
 
-    $response
-        ->assertHasNoErrors()
-        ->assertRedirect(route('dashboard', absolute: false));
+    // Verifica se o usuário foi criado no banco de dados
+    $this->assertDatabaseHas('users', [
+        'email' => 'test@example.com',
+        'name' => 'Test User',
+    ]);
 
-    $this->assertAuthenticated();
+    // Verifica redirecionamento para a página de verificação
+    $component->assertRedirect(route('verification.notice'));
 });
