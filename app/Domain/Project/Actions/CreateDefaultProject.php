@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Domain\Project\Actions;
-use App\Models\User;
+
 use App\Domain\Project\DTOs\ProjectData;
-use App\Domain\Project\Actions\CreateProjectAction;
-use App\Models\Project;
+use App\Models\{Project, User};
+
 class CreateDefaultProject
 {
     public function execute(User $user): Project
@@ -20,11 +22,11 @@ class CreateDefaultProject
             description: "Projeto padrão criado para {$user->name}",
             ownerId: $user->id
         );
-        $createProjectAction = new CreateProjectAction();
+        $createProjectAction = new CreateProjectAction;
         $project = $createProjectAction->execute($projectData);
 
         $project->users()->attach($user->id);
 
-         return $project;
+        return $project;
     }
 }

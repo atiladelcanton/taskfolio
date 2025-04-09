@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Domain\User\Actions;
 
-use App\Domain\User\DTOs\UserData;
-use Illuminate\Auth\Events\Registered;
-use App\Models\User;
 use App\Domain\Project\Actions\CreateDefaultProject;
+use App\Domain\User\DTOs\UserData;
+use App\Models\User;
+
 class RegisterUserAction
 {
     protected $createUserAction;
@@ -24,7 +24,7 @@ class RegisterUserAction
     {
         $user = $this->createUserAction->execute($userData);
 
-        $createDefaultProject = new CreateDefaultProject();
+        $createDefaultProject = new CreateDefaultProject;
         $createDefaultProject->execute($user);
 
         return $user;

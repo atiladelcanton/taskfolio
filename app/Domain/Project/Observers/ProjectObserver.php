@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Domain\Project\Observers;
 
 use App\Models\Project;
@@ -11,7 +13,7 @@ class ProjectObserver
      */
     public function created(Project $project): void
     {
-        $project->project_code = 'PJR-' . $project->id;
+        $project->project_code = 'PJR-'.$project->id;
         $project->save();
     }
 
