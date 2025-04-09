@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Livewire\Projects;
 
+use App\Domain\Board\Events\CreateDefaultBoard;
 use App\Livewire\Forms\ProjectForm;
 use App\Models\Project as ProjectModel;
 use Auth;
@@ -46,7 +47,7 @@ class Project extends Component
     {
         $project = $this->projectForm->store();
         $this->projectForm->reset();
-        // @todo Incluir fluxo de criacao de boards
+        event(new CreateDefaultBoard($project));
         Flux::toast(text: 'Projeto criado com sucesso!', heading: 'Sucesso', variant: 'success');
 
         return $this->redirect(route('projects.index'), navigate: true);
