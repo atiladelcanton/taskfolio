@@ -20,7 +20,7 @@ readonly class UserData
     ) {}
 
     /**
-     * @param UserDataArray $data
+     * @param  UserDataArray  $data
      */
     public static function from(array $data): self
     {

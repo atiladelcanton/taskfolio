@@ -62,10 +62,19 @@
                                 <flux:table.cell>
                                     <flux:avatar.group>
                                         @foreach($project->users->take(5) as $user)
+                                            @if($user->avatar)
+                                                <flux:avatar
+                                                    circle
+                                                    src="{{asset('storage/' . $user->avatar)}}"
+                                                    title="{{ $user->name }}"
+                                                />
+                                                @else
                                             <flux:avatar
+                                                circle
                                                 src="https://ui-avatars.com/api/?name={{ urlencode($user->name) }}&background=random"
                                                 title="{{ $user->name }}"
                                             />
+                                            @endif
                                         @endforeach
                                         @if($project->users->count() > 5)
                                             <flux:avatar>{{ $project->users->count() - 5 }}+</flux:avatar>

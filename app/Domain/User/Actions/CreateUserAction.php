@@ -12,12 +12,10 @@ readonly class CreateUserAction
 {
     public function execute(UserData $userData): User
     {
-        $user = User::create([
+        return User::create([
             'name' => $userData->name,
             'email' => $userData->email,
             'password' => Hash::make($userData->password),
         ]);
-
-        return $user;
     }
 }

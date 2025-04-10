@@ -10,11 +10,8 @@ use App\Models\User;
 
 class RegisterUserAction
 {
-    protected CreateUserAction $createUserAction;
-
-    public function __construct(CreateUserAction $createUserAction)
+    public function __construct(protected CreateUserAction $createUserAction)
     {
-        $this->createUserAction = $createUserAction;
     }
 
     /**

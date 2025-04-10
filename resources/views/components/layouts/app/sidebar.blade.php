@@ -24,12 +24,20 @@
 
             <!-- Desktop User Menu -->
             <flux:dropdown position="bottom" align="start">
+                @if(auth()->user()->avatar)
+                    <flux:profile
+                        :name="auth()->user()->name"
+                        :avatar="asset('storage/' . auth()->user()->avatar)"
+                        icon-trailing="chevrons-up-down"
+                        circle
+                    />
+                @else
                 <flux:profile
                     :name="auth()->user()->name"
                     :initials="auth()->user()->initials()"
                     icon-trailing="chevrons-up-down"
                 />
-
+                @endif
                 <flux:menu class="w-[220px]">
                     <flux:menu.radio.group>
                         <div class="p-0 text-sm font-normal">
@@ -38,7 +46,12 @@
                                     <span
                                         class="flex h-full w-full items-center justify-center rounded-lg bg-neutral-200 text-black dark:bg-neutral-700 dark:text-white"
                                     >
-                                        {{ auth()->user()->initials() }}
+                                        @if(auth()->user()->avatar)
+                                            <img src="{{ asset('storage/' . auth()->user()->avatar) }}" class="rounded-full h-8 w-8 object-cover" alt="{{ auth()->user()->name }}"/>
+                                            @else
+                                             {{ auth()->user()->initials()}}
+                                            @endif
+
                                     </span>
                                 </span>
 

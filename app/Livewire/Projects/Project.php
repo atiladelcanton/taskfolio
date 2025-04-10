@@ -27,13 +27,11 @@ class Project extends Component
     public function render(): View|Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
     {
         $projects = ProjectModel::query()
-            ->when($this->searchTerm, function ($q) {
-                return $q->where('name', 'like', '%'.$this->searchTerm.'%')
-                    ->orWhere('project_code', 'like', '%'.$this->searchTerm.'%')
-                    ->orWhere('description', 'like', '%'.$this->searchTerm.'%');
-            })->where(function ($q) {
+            ->when($this->searchTerm, fn($q) => $q->where('name', 'like', '%'.$this->searchTerm.'%')
+                ->orWhere('project_code', 'like', '%'.$this->searchTerm.'%')
+                ->orWhere('description', 'like', '%'.$this->searchTerm.'%'))->where(function ($q): void {
                 $q->where('owner_id', Auth::id())
-                    ->orWhereHas('users', function ($q) {
+                    ->orWhereHas('users', function ($q): void {
                         $q->where('users.id', Auth::id());
                     });
             })->with(['owner', 'users', 'sprints'])->latest()->paginate(10);

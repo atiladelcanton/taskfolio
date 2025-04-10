@@ -1,19 +1,30 @@
+@php use Illuminate\Contracts\Auth\MustVerifyEmail; @endphp
 <section class="w-full">
     @include('partials.settings-heading')
 
     <x-settings.layout :heading="__('Profile')" :subheading="__('Update your name and email address')">
         <form wire:submit="updateProfileInformation" class="my-6 w-full space-y-6">
-            <flux:input wire:model="name" :label="__('Name')" type="text" required autofocus autocomplete="name" />
+            <div>
+                <flux:input type="file" wire:model="avatar" label="Foto de Perfil"/>
+                <flux:text class="mt-4">
+                    @error('avatar') <span
+                        class="mt-2 font-medium !dark:text-red-400 !text-red-60">{{ $message }}</span> @enderror
+                </flux:text>
+            </div>
+
+
+            <flux:input wire:model="name" :label="__('Name')" type="text" required autofocus autocomplete="name"/>
 
             <div>
-                <flux:input wire:model="email" :label="__('Email')" type="email" required autocomplete="email" />
+                <flux:input wire:model="email" :label="__('Email')" type="email" required autocomplete="email"/>
 
-                @if (auth()->user() instanceof \Illuminate\Contracts\Auth\MustVerifyEmail &&! auth()->user()->hasVerifiedEmail())
+                @if (auth()->user() instanceof MustVerifyEmail &&! auth()->user()->hasVerifiedEmail())
                     <div>
                         <flux:text class="mt-4">
                             {{ __('Your email address is unverified.') }}
 
-                            <flux:link class="text-sm cursor-pointer" wire:click.prevent="resendVerificationNotification">
+                            <flux:link class="text-sm cursor-pointer"
+                                       wire:click.prevent="resendVerificationNotification">
                                 {{ __('Click here to re-send the verification email.') }}
                             </flux:link>
                         </flux:text>
@@ -38,6 +49,6 @@
             </div>
         </form>
 
-        <livewire:settings.delete-user-form />
+        <livewire:settings.delete-user-form/>
     </x-settings.layout>
 </section>

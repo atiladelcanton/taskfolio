@@ -7,13 +7,20 @@ namespace App\Livewire\Settings;
 use App\Models\User;
 use Illuminate\Support\Facades\{Auth, Session};
 use Illuminate\Validation\Rule;
-use Livewire\Component;
+use Livewire\Attributes\Validate;
+use Livewire\{Component, WithFileUploads};
 
 class Profile extends Component
 {
+    use WithFileUploads;
+
     public string $name = '';
 
     public string $email = '';
+
+    #[Validate('image|max:1024')]
+    // @phpstan-ignore missingType.property
+    public $avatar;
 
     /**
      * Mount the component.
@@ -30,20 +37,10 @@ class Profile extends Component
     public function updateProfileInformation(): void
     {
         $user = Auth::user();
+        $validated = $this->validate(['name' => ['required', 'string', 'max:255'],
 
-        $validated = $this->validate([
-            'name' => ['required', 'string', 'max:255'],
-
-            'email' => [
-                'required',
-                'string',
-                'lowercase',
-                'email',
-                'max:255',
-                Rule::unique(User::class)->ignore($user->id),
-            ],
-        ]);
-
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique(User::class)->ignore($user->id)], ]);
+        $validated['avatar'] = $this->avatar->store(path: 'avatars');
         $user->fill($validated);
 
         if ($user->isDirty('email')) {

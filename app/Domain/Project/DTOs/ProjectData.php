@@ -22,7 +22,7 @@ readonly class ProjectData
     ) {}
 
     /**
-     * @param ProjectDataArray $data
+     * @param  ProjectDataArray  $data
      */
     public static function from(array $data): self
     {
