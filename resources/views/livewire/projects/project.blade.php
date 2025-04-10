@@ -106,9 +106,9 @@
             <div class="space-y-6">
                 <form wire:submit="{{$projectId === 0 ? 'createProject': 'updateProject'}}">
                     <flux:heading size="lg">{{$projectId === 0 ? 'Novo Projeto': 'Editar Projeto'}}</flux:heading>
-                    <flux:text class="mt-2">Informe o nome do seu projeto.</flux:text>
-                    <flux:input wire:model="projectForm.name" label="Nome do Projeto" placeholder="Projeto Laravel"/>
-                    <flux:textarea wire:model="projectForm.description" label="Descricao do Projeto"
+                    <flux:text class="mt-2 mb-4">Informe o nome do seu projeto.</flux:text>
+                    <flux:input class="py-6" wire:model="projectForm.name" label="Nome do Projeto" placeholder="Projeto Laravel"/>
+                    <flux:textarea class="my-4" wire:model="projectForm.description" label="Descricao do Projeto"
                                    description="Breve descricao do projeto"/>
 
                     <div class="flex md:flex-row justify-between items-start md:items-center">
