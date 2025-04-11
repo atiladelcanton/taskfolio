@@ -10,9 +10,7 @@ use App\Models\User;
 
 class RegisterUserAction
 {
-    public function __construct(protected CreateUserAction $createUserAction)
-    {
-    }
+    public function __construct(protected CreateUserAction $createUserAction) {}
 
     /**
      * Register a new user and send a verification email

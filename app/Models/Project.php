@@ -12,12 +12,7 @@ class Project extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'project_code',
-        'owner_id',
-        'name',
-        'description',
-    ];
+    protected $fillable = ['project_code', 'owner_id', 'name', 'description',];
 
     /**
      * @return BelongsTo<User, $this>
@@ -32,7 +27,7 @@ class Project extends Model
      */
     public function users(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'user_projects');
+        return $this->belongsToMany(User::class, 'user_projects')->whereNull('user_projects.deleted_at')->withTimestamps();
     }
 
     /**
