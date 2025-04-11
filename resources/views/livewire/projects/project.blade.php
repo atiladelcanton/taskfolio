@@ -161,7 +161,7 @@
     <flux:modal name="add-participants-project" variant="flyout" wire:close="closeModal">
         <div class="space-y-6">
             <div class="space-y-6">
-                <form wire:submit="{{$projectId === 0 ? 'createProject': 'updateProject'}}">
+                <form wire:submit="syncParticipantsToProject">
                     <flux:heading size="lg">Adicionar Participantes</flux:heading>
                     <flux:text class="mt-2 mb-4">Adicione pessoas para poder utilizar o projeto.</flux:text>
                     <flux:select class="m-4" multiple variant="listbox"  placeholder="Selecione os Participantes"  wire:model="syncParticipants">

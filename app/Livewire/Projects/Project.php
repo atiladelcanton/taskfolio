@@ -10,6 +10,7 @@ use App\Models\Project as ProjectModel;
 use App\Models\User;
 use Auth;
 use Flux\Flux;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Application;
 use Livewire\Attributes\{Layout, Title};
@@ -28,7 +29,7 @@ class Project extends Component
     public array $syncParticipants = [];
     public string|int $projectId = 0;
 public object $usersInMyProject;
-    public function render(): View|Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+    public function render(): View|Application|Factory|\Illuminate\View\View
     {
         $projects = ProjectModel::query()
             ->when($this->searchTerm, fn($q) => $q->where('name', 'like', '%'.$this->searchTerm.'%')
@@ -60,12 +61,28 @@ public object $usersInMyProject;
         $this->projectId = (int) $id;
         $project = ProjectModel::find($id);
         $this->projectForm->fill($project);
-        $this->modal('new-project')->show();
+        self::modal('new-project')->show();
     }
 
     public function updateProject(): void
     {
+
+
+        if (empty($this->projectId) || $this->projectId == 0) {
+            Flux::toast(text: 'ID do projeto inválido!', heading: 'Erro', variant: 'danger');
+            return;
+        }
+
         $project = ProjectModel::find($this->projectId);
+
+        if (!$project) {
+            \Log::warning('Projeto não encontrado no updateProject', [
+                'project_id' => $this->projectId
+            ]);
+            Flux::toast(text: 'Projeto não encontrado!', heading: 'Erro', variant: 'danger');
+            return;
+        }
+
         $this->projectForm->update($project);
         $this->projectForm->reset();
         $this->modal('new-project')->close();
@@ -104,23 +121,29 @@ public object $usersInMyProject;
     }
 
     public function syncParticipantsToProject(): void {
-        if (empty($this->syncParticipants)) {
-            Flux::toast(text: 'Nenhum participante selecionado', heading: 'Aviso', variant: 'warning');
-            return;
-        }
+
+
         $project = ProjectModel::findOrFail($this->projectId);
-        $participantsWithData = [];
-        foreach ($this->syncParticipants as $userId) {
-            $participantsWithData[$userId] = [
-                'created_at' => now(),
-                'updated_at' => now(),
-            ];
+
+        $existingUserIds = $project->users()->pluck('users.id')->toArray();
+
+        $newUserIds = array_diff($this->syncParticipants, $existingUserIds);
+
+        if (empty($newUserIds)) {
+            Flux::toast(text: 'Todos os participantes selecionados já estão no projeto', heading: 'Informação', variant: 'info');
+        } else {
+            $project->users()->attach($newUserIds);
+            Flux::toast(text: 'Participantes adicionados com sucesso!', heading: 'Sucesso', variant: 'success');
         }
-        $project->users()->syncWithoutDetaching($participantsWithData);
+
         $this->syncParticipants = [];
 
-        $this->modal('add-participants-project')->close();
-        Flux::toast(text: 'Participantes atualizados com sucesso!', heading: 'Sucesso', variant: 'success');
+        self::modal('add-participants-project')->close();
+
+        $savedProjectId = $this->projectId;
+
+        $this->dispatch('participants-synced', $savedProjectId);
+
 
     }
 }
