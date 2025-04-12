@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Livewire\Forms;
 
-use App\Models\Project;
+use App\Domain\Project\Models\Project;
 use Livewire\Attributes\Validate;
 use Livewire\Form;
 

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\User\Actions;
 
-use App\Domain\Project\Actions\CreateDefaultProject;
+use App\Domain\Project\Actions\CreateDefaultProjectAction;
 use App\Domain\User\DTOs\UserData;
 use App\Models\User;
 
@@ -19,7 +19,7 @@ class RegisterUserAction
     {
         $user = $this->createUserAction->execute($userData);
 
-        $createDefaultProject = new CreateDefaultProject;
+        $createDefaultProject = new CreateDefaultProjectAction;
         $createDefaultProject->execute($user);
 
         return $user;

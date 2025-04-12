@@ -91,7 +91,7 @@
                                             </flux:menu.item>
                                             <flux:menu.item icon="plus"
                                                             wire:click="addParticipants({{ $project->id }})"
-                                                            class="cursor-pointer">Adicionar Participantes
+                                                            class="cursor-pointer">Gerenciar Participantes
                                             </flux:menu.item>
                                             <flux:menu.separator />
 
@@ -162,8 +162,8 @@
         <div class="space-y-6">
             <div class="space-y-6">
                 <form wire:submit="syncParticipantsToProject">
-                    <flux:heading size="lg">Adicionar Participantes</flux:heading>
-                    <flux:text class="mt-2 mb-4">Adicione pessoas para poder utilizar o projeto.</flux:text>
+                    <flux:heading size="lg">Gerenciar Participantes</flux:heading>
+                    <flux:text class="mt-2 mb-4">Gerencie as pessoas para poder utilizar o projeto.</flux:text>
                     <flux:select  multiple variant="listbox"  placeholder="Selecione os Participantes"  wire:model="syncParticipants">
                         @if($usersInSomeProjects)
                             @foreach($usersInSomeProjects as $user)

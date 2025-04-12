@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Board\Events;
 
-use App\Models\Project;
+use App\Domain\Project\Models\Project;
 use Illuminate\Broadcasting\{Channel, InteractsWithSockets, PrivateChannel};
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;

@@ -5,16 +5,22 @@ declare(strict_types=1);
 namespace App\Livewire\Projects;
 
 use App\Domain\Board\Events\CreateDefaultBoard;
+use App\Domain\Project\Actions\{AddUserInProjectAction,
+    DeleteProjectAction,
+    GetProjectByIdAction,
+    GetProjectsAndSearchableAction,
+    GetUsersInMyProjectsAction,
+    GetUsersInSpecificProjectAction,
+    RemoveParticipantToProjectAction
+};
+use App\Domain\Project\Models\Project as ProjectModel;
 use App\Livewire\Forms\ProjectForm;
-use Illuminate\Support\Facades\DB;
-use App\Models\{Project as ProjectModel, User, UserProject};
-use Auth;
+use DomainException;
 use Flux\Flux;
 use Illuminate\Contracts\View\{Factory, View};
 use Illuminate\Foundation\Application;
 use Livewire\Attributes\{Layout, Title};
 use Livewire\Component;
-use Log;
 
 #[Layout('components.layouts.app')]
 #[Title('Gerenciamento de Projetos')]
@@ -32,17 +38,12 @@ class Project extends Component
     public string|int $projectId = 0;
 
     public object $usersInSomeProjects;
+
     public array $usersInProject = [];
+
     public function render(): View|Application|Factory|\Illuminate\View\View
     {
-        $projects = ProjectModel::query()
-            ->when($this->searchTerm, fn ($q) => $q->where('name', 'like', '%'.$this->searchTerm.'%')
-                ->orWhere('project_code', 'like', '%'.$this->searchTerm.'%')->orWhere('description', 'like', '%'.$this->searchTerm.'%'))
-            ->where(function ($q): void {
-            $q->where('owner_id', Auth::id())->orWhereHas('users', function ($q): void {
-                $q->where('users.id', Auth::id());
-            });
-        })->with(['owner', 'users', 'sprints'])->latest()->paginate(10);
+        $projects = GetProjectsAndSearchableAction::execute($this->searchTerm);
 
         return view('livewire.projects.project', ['projects' => $projects]);
     }
@@ -51,6 +52,11 @@ class Project extends Component
     {
         $project = $this->projectForm->store();
         $this->projectForm->reset();
+        /**
+         * @todo criar um novo Event, CreatedProject
+         *    -> Listener de Board
+         *    -> Listener de Sprint
+         */
         event(new CreateDefaultBoard($project));
         Flux::toast(text: 'Projeto criado com sucesso!', heading: 'Sucesso', variant: 'success');
 
@@ -59,7 +65,7 @@ class Project extends Component
 
     public function editProject(string $id): void
     {
-        $this->projectId = (int) $id;
+        $this->projectId = (int)$id;
         $project = ProjectModel::find($id);
         $this->projectForm->fill($project);
         self::modal('new-project')->show();
@@ -67,60 +73,42 @@ class Project extends Component
 
     public function updateProject(): void
     {
-        if ($this->projectId === '' || $this->projectId === '0' || $this->projectId == 0) {
-            Flux::toast(text: 'ID do projeto inválido!', heading: 'Erro', variant: 'danger');
-
-            return;
-        }
-
-        $project = ProjectModel::find($this->projectId);
-
-        if (! $project) {
-            Log::warning('Projeto não encontrado no updateProject', ['project_id' => $this->projectId]);
-            Flux::toast(text: 'Projeto não encontrado!', heading: 'Erro', variant: 'danger');
-
-            return;
-        }
+        $project = GetProjectByIdAction::execute($this->projectId);
 
         $this->projectForm->update($project);
         $this->projectForm->reset();
-        $this->modal('new-project')->close();
+        self::modal('new-project')->close();
         Flux::toast(text: 'Projeto atualizado com sucesso!', heading: 'Sucesso', variant: 'success');
     }
 
     public function deleteProject(): null
     {
-        ProjectModel::destroy($this->projectId);
+        DeleteProjectAction::execute($this->projectId);
         Flux::toast(text: 'Projeto deletado com sucesso!', heading: 'Sucesso', variant: 'success');
         $this->projectId = 0;
 
+        /** @todo Create a event and listener to delete boards,sprints and tasks */
         return $this->redirect(route('projects.index'), navigate: true);
     }
 
     public function confirmDeleteProject(string $id): void
     {
-        $this->projectId = (int) $id;
-        $this->modal('delete-project')->show();
+        $this->projectId = (int)$id;
+        self::modal('delete-project')->show();
     }
 
     public function addParticipants(string $id): void
     {
-        $this->projectId = (int) $id;
-        $project = ProjectModel::find($this->projectId);
+        $this->projectId = (int)$id;
 
-        if (!$project) {
-            Flux::toast(text: 'Projeto não encontrado!', heading: 'Erro', variant: 'danger');
-            return;
-        }
-        $this->usersInSomeProjects = User::whereHas('projects', function ($query): void {
-            $query->where('owner_id', auth()->id());
-        })->select('id as user_id', 'name', 'avatar')->distinct()->get();
+        $this->usersInSomeProjects = GetUsersInMyProjectsAction::execute();
 
-        $this->usersInProject = $project->users()
-            ->select('users.id as user_id', 'users.name', 'users.avatar')
-            ->get()->toArray();
-
-        $this->modal('add-participants-project')->show();
+        $this->usersInProject = GetUsersInSpecificProjectAction::execute($this->projectId);
+        /**
+         * @todo criar um event e listener apos adicionar um participante ao projeto, para notificar
+         *   -> PartcipantAddedToProjectListener
+         */
+        self::modal('add-participants-project')->show();
     }
 
     public function closeModal(): void
@@ -130,81 +118,22 @@ class Project extends Component
 
     public function syncParticipantsToProject(): void
     {
-
-        $project = ProjectModel::findOrFail($this->projectId);
-        foreach ($this->syncParticipants as $userId) {
-
-            $existingRecord = DB::table('user_projects')
-                ->where('project_id', $this->projectId)
-                ->where('user_id', $userId)
-                ->first();
-
-            if ($existingRecord) {
-
-                DB::table('user_projects')
-                    ->where('project_id', $this->projectId)
-                    ->where('user_id', $userId)
-                    ->update([
-                        'deleted_at' => null,
-                        'updated_at' => now()
-                    ]);
-            } else {
-                $project->users()->attach($userId);
-            }
-        }
+        AddUserInProjectAction::execute($this->projectId, $this->syncParticipants, auth()->id());
         $this->syncParticipants = [];
-        $this->modal('add-participants-project')->close();
+        self::modal('add-participants-project')->close();
 
         Flux::toast(text: 'Participantes adicionados com sucesso!', heading: 'Sucesso', variant: 'success');
     }
 
     public function removeParticipantFromProject(int $userId): void
     {
-        if (empty($this->projectId)) {
-            Flux::toast(text: 'Nenhum projeto selecionado', heading: 'Erro', variant: 'danger');
-            return;
+        try {
+            RemoveParticipantToProjectAction::execute($this->projectId, $userId);
+            $this->usersInProject = GetUsersInSpecificProjectAction::execute($this->projectId);
+            $this->usersInSomeProjects = GetUsersInMyProjectsAction::execute();
+            Flux::toast(text: 'Participante removido com sucesso', heading: 'Sucesso', variant: 'success');
+        } catch (DomainException $e) {
+            Flux::toast(text: $e->getMessage(), heading: 'Erro', variant: 'danger');
         }
-
-        $project = ProjectModel::find($this->projectId);
-
-        if (!$project) {
-            Flux::toast(text: 'Projeto não encontrado', heading: 'Erro', variant: 'danger');
-            return;
-        }
-
-        if ($project->owner_id === $userId) {
-            Flux::toast(text: 'Não é possível remover o proprietário do projeto', heading: 'Aviso', variant: 'warning');
-            return;
-        }
-
-        if ($project->owner_id !== auth()->id()) {
-            Flux::toast(text: 'Você não tem permissão para remover participantes deste projeto', heading: 'Erro', variant: 'danger');
-            return;
-        }
-
-        $pivotEntry = UserProject::query()->where('project_id', $this->projectId)
-            ->where('user_id', $userId)
-            ->first();
-
-        if ($pivotEntry) {
-            $pivotEntry->delete();
-        }
-
-        $this->usersInProject = $project->users()
-            ->select('users.id as user_id', 'users.name', 'users.avatar')
-            ->get()->toArray();
-
-
-        $this->usersInSomeProjects = User::whereHas('projects', static function($query) {
-            $query->where('owner_id', auth()->id());
-        })
-            ->whereDoesntHave('projects', function($query) {
-                $query->where('projects.id', $this->projectId);
-            })
-            ->select('id as user_id', 'name', 'avatar')
-            ->distinct()
-            ->get();
-
-        Flux::toast(text: 'Participante removido com sucesso', heading: 'Sucesso', variant: 'success');
     }
 }

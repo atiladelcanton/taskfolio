@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
-use App\Models\{Board, Project};
+use App\Domain\Board\Models\{Board};
+use App\Domain\Project\Models\Project;
 use Illuminate\Database\Seeder;
 
 class BoardSeeder extends Seeder

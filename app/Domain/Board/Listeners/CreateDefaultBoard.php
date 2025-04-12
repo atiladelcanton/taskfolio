@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Board\Listeners;
 
-use App\Models\Board;
+use App\Domain\Board\Models\Board;
 
 class CreateDefaultBoard
 {

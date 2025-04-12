@@ -5,15 +5,14 @@ declare(strict_types=1);
 namespace App\Domain\Project\Actions;
 
 use App\Domain\Project\DTOs\ProjectData;
-use App\Models\{Project, User};
+use App\Domain\Project\Models\Project;
+use App\Models\{User};
 
-class CreateDefaultProject
+class CreateDefaultProjectAction
 {
     public function execute(User $user): Project
     {
         if ($user->ownedProjects()->exists() || $user->projects()->exists()) {
-            \Log::info("Usuário {$user->id} já possui projetos, não criando projeto padrão.");
-
             throw new \Exception("Usuário {$user->id} já possui projetos, não criando projeto padrão.");
         }
 
