@@ -5,11 +5,19 @@ declare(strict_types=1);
 namespace App\Livewire\Projects;
 
 use App\Domain\Board\Events\CreateDefaultBoard;
+use App\Domain\Project\Actions\{AddUserInProjectAction,
+    DeleteProjectAction,
+    GetProjectByIdAction,
+    GetProjectsAndSearchableAction,
+    GetUsersInMyProjectsAction,
+    GetUsersInSpecificProjectAction,
+    RemoveParticipantToProjectAction
+};
+use App\Domain\Project\Models\Project as ProjectModel;
 use App\Livewire\Forms\ProjectForm;
-use App\Models\Project as ProjectModel;
-use Auth;
+use DomainException;
 use Flux\Flux;
-use Illuminate\Contracts\View\View;
+use Illuminate\Contracts\View\{Factory, View};
 use Illuminate\Foundation\Application;
 use Livewire\Attributes\{Layout, Title};
 use Livewire\Component;
@@ -22,29 +30,35 @@ class Project extends Component
 
     public string $searchTerm = '';
 
+    /**
+     * @var array<int>
+     */
+    public array $syncParticipants = [];
+
     public string|int $projectId = 0;
 
-    public function render(): View|Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
-    {
-        $projects = ProjectModel::query()
-            ->when($this->searchTerm, fn($q) => $q->where('name', 'like', '%'.$this->searchTerm.'%')
-                ->orWhere('project_code', 'like', '%'.$this->searchTerm.'%')
-                ->orWhere('description', 'like', '%'.$this->searchTerm.'%'))->where(function ($q): void {
-                $q->where('owner_id', Auth::id())
-                    ->orWhereHas('users', function ($q): void {
-                        $q->where('users.id', Auth::id());
-                    });
-            })->with(['owner', 'users', 'sprints'])->latest()->paginate(10);
+    public object $usersInSomeProjects;
+    /**
+     * @var array<int, array<string, mixed>>
+     */
+    public array $usersInProject = [];
 
-        return view('livewire.projects.project', [
-            'projects' => $projects,
-        ]);
+    public function render(): View|Application|Factory|\Illuminate\View\View
+    {
+        $projects = GetProjectsAndSearchableAction::execute($this->searchTerm);
+
+        return view('livewire.projects.project', ['projects' => $projects]);
     }
 
     public function createProject(): null
     {
         $project = $this->projectForm->store();
         $this->projectForm->reset();
+        /**
+         * @todo criar um novo Event, CreatedProject
+         *    -> Listener de Board
+         *    -> Listener de Sprint
+         */
         event(new CreateDefaultBoard($project));
         Flux::toast(text: 'Projeto criado com sucesso!', heading: 'Sucesso', variant: 'success');
 
@@ -53,33 +67,76 @@ class Project extends Component
 
     public function editProject(string $id): void
     {
-        $this->projectId = (int) $id;
+        $this->projectId = (int)$id;
         $project = ProjectModel::find($id);
         $this->projectForm->fill($project);
-        $this->modal('new-project')->show();
+        self::modal('new-project')->show();
     }
 
     public function updateProject(): void
     {
-        $project = ProjectModel::find($this->projectId);
+        $project = GetProjectByIdAction::execute($this->projectId);
+
         $this->projectForm->update($project);
         $this->projectForm->reset();
-        $this->modal('new-project')->close();
+        self::modal('new-project')->close();
         Flux::toast(text: 'Projeto atualizado com sucesso!', heading: 'Sucesso', variant: 'success');
     }
 
     public function deleteProject(): null
     {
-        ProjectModel::destroy($this->projectId);
+        DeleteProjectAction::execute($this->projectId);
         Flux::toast(text: 'Projeto deletado com sucesso!', heading: 'Sucesso', variant: 'success');
         $this->projectId = 0;
 
+        /** @todo Create a event and listener to delete boards,sprints and tasks */
         return $this->redirect(route('projects.index'), navigate: true);
     }
 
     public function confirmDeleteProject(string $id): void
     {
-        $this->projectId = (int) $id;
-        $this->modal('delete-project')->show();
+        $this->projectId = (int)$id;
+        self::modal('delete-project')->show();
+    }
+
+    public function addParticipants(string $id): void
+    {
+        $this->projectId = (int)$id;
+
+        $this->usersInSomeProjects = GetUsersInMyProjectsAction::execute();
+
+        $this->usersInProject = GetUsersInSpecificProjectAction::execute($this->projectId);
+        /**
+         * @todo criar um event e listener apos adicionar um participante ao projeto, para notificar
+         *   -> PartcipantAddedToProjectListener
+         */
+        self::modal('add-participants-project')->show();
+    }
+
+    public function closeModal(): void
+    {
+        $this->projectId = 0;
+    }
+
+    public function syncParticipantsToProject(): void
+    {
+
+        AddUserInProjectAction::execute($this->projectId, $this->syncParticipants, auth()->id());
+        $this->syncParticipants = [];
+        self::modal('add-participants-project')->close();
+
+        Flux::toast(text: 'Participantes adicionados com sucesso!', heading: 'Sucesso', variant: 'success');
+    }
+
+    public function removeParticipantFromProject(int $userId): void
+    {
+        try {
+            RemoveParticipantToProjectAction::execute($this->projectId, $userId);
+            $this->usersInProject = GetUsersInSpecificProjectAction::execute($this->projectId);
+            $this->usersInSomeProjects = GetUsersInMyProjectsAction::execute();
+            Flux::toast(text: 'Participante removido com sucesso', heading: 'Sucesso', variant: 'success');
+        } catch (DomainException $e) {
+            Flux::toast(text: $e->getMessage(), heading: 'Erro', variant: 'danger');
+        }
     }
 }

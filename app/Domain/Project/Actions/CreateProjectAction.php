@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Domain\Project\Actions;
 
 use App\Domain\Project\DTOs\ProjectData;
-use App\Models\Project;
+use App\Domain\Project\Models\Project;
 use Illuminate\Support\Str;
 
 class CreateProjectAction

@@ -83,13 +83,17 @@
                                 </flux:table.cell>
                                 <flux:table.cell>
                                     <flux:dropdown>
-                                        <flux:button icon:trailing="chevron-down">Opcoes</flux:button>
+                                        <flux:button icon:trailing="chevron-down">Opções</flux:button>
                                         <flux:menu>
                                             <flux:menu.item icon="pencil-square"
                                                             wire:click="editProject({{ $project->id }})"
                                                             class="cursor-pointer">Editar
                                             </flux:menu.item>
-
+                                            <flux:menu.item icon="plus"
+                                                            wire:click="addParticipants({{ $project->id }})"
+                                                            class="cursor-pointer">Gerenciar Participantes
+                                            </flux:menu.item>
+                                            <flux:menu.separator />
 
                                             <flux:menu.item icon="trash" variant="danger"
                                                             wire:click="confirmDeleteProject({{ $project->id }})"
@@ -110,7 +114,7 @@
     </flux:card>
 
     {{--    MODALS --}}
-    <flux:modal name="new-project" variant="flyout">
+    <flux:modal name="new-project" wire:close="closeModal" variant="flyout">
         <div class="space-y-6">
             <div class="space-y-6">
                 <form wire:submit="{{$projectId === 0 ? 'createProject': 'updateProject'}}">
@@ -133,7 +137,7 @@
         </div>
     </flux:modal>
 
-    <flux:modal name="delete-project" class="min-w-[22rem]">
+    <flux:modal name="delete-project" wire:close="closeModal" class="min-w-[22rem]">
         <div class="space-y-6">
             <div>
                 <flux:heading size="lg">Você deseja remover este projeto?</flux:heading>
@@ -149,6 +153,71 @@
                 </flux:modal.close>
                 <flux:button wire:click="deleteProject" class="cursor-alias" variant="danger">Deletar Projeto
                 </flux:button>
+            </div>
+        </div>
+    </flux:modal>
+
+
+    <flux:modal name="add-participants-project" variant="flyout" wire:close="closeModal">
+        <div class="space-y-6">
+            <div class="space-y-6">
+                <form wire:submit="syncParticipantsToProject">
+                    <flux:heading size="lg">Gerenciar Participantes</flux:heading>
+                    <flux:text class="mt-2 mb-4">Gerencie as pessoas para poder utilizar o projeto.</flux:text>
+                    <flux:select  multiple variant="listbox"  placeholder="Selecione os Participantes"  wire:model="syncParticipants">
+                        @if($usersInSomeProjects)
+                            @foreach($usersInSomeProjects as $user)
+                                <flux:select.option value="{{$user->user_id}}" >{{$user->name}}</flux:select.option>
+                            @endforeach
+                        @endif
+                    </flux:select>
+                    <flux:spacer/>
+                    <flux:separator class="my-4"/>
+                    @if($usersInProject)
+                        <flux:card class="mb-4">
+                            <div class="flex justify-between items-center">
+                                <flux:heading>Participantes</flux:heading>
+                            </div>
+
+                            <flux:separator class="mt-2 mb-4" variant="subtle" />
+
+                            <ul class="flex flex-col gap-3">
+
+                                @foreach($usersInProject as $userProject)
+
+                                    <li class="flex align-middle gap-2">
+                                        @if($userProject['avatar'])
+                                            <flux:avatar
+                                                size="xs"
+                                                circle
+                                                src="{{asset('storage/' . $userProject['avatar'])}}"
+                                                title="{{ $userProject['name'] }}"
+                                            />
+                                        @else
+                                            <flux:avatar
+                                                size="xs"
+                                                circle
+                                                src="https://ui-avatars.com/api/?name={{ urlencode($userProject['name']) }}&background=random"
+                                                title="{{ $userProject['name'] }}"
+                                            />
+                                        @endif
+                                        <flux:heading class="flex-1">{{$userProject['name']}}</flux:heading>
+                                        <flux:button icon="trash" size="xs" variant="subtle" class="cursor-pointer" wire:click="removeParticipantFromProject({{$userProject['user_id']}})"></flux:button>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </flux:card>
+
+                    @endif
+                    <div class="flex md:flex-row justify-between items-start md:items-center">
+                        <flux:modal.close>
+                            <flux:button variant="subtle" class="cursor-pointer">Cancelar</flux:button>
+                        </flux:modal.close>
+                        <flux:button variant="primary" type="submit" class="cursor-pointer" wire:click="syncParticipantsToProject">
+                            Adicionar Participantes
+                        </flux:button>
+                    </div>
+                </form>
             </div>
         </div>
     </flux:modal>

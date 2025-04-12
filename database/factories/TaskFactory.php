@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
-use App\Models\{Board, Sprint, Task, User};
+use App\Domain\Board\Models\Board;
+use App\Models\{Sprint, Task, User};
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class TaskFactory extends Factory

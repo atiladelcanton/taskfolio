@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
-use App\Models\{Project, Sprint};
+use App\Domain\Project\Models\Project;
+use App\Models\{Sprint};
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class SprintFactory extends Factory

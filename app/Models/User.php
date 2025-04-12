@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Domain\Project\Models\Project;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\{BelongsToMany, HasMany};
@@ -52,7 +53,8 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function projects(): BelongsToMany
     {
-        return $this->belongsToMany(Project::class, 'user_projects');
+        return $this->belongsToMany(Project::class, 'user_projects')
+            ->withTimestamps();
     }
 
     /**

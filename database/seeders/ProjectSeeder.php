@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
-use App\Models\{Project, User, UserProject};
+use App\Domain\Project\Models\Project;
+use App\Models\{User, UserProject};
 use Illuminate\Database\Seeder;
 use Random\RandomException;
 

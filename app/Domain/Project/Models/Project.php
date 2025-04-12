@@ -2,25 +2,34 @@
 
 declare(strict_types=1);
 
-namespace App\Models;
+namespace App\Domain\Project\Models;
 
+use App\Domain\Board\Models\Board;
+use Database\Factories\ProjectFactory;
+use App\Models\{Sprint, User};
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\{BelongsTo, BelongsToMany, HasMany};
 
+/**
+ * @property string $project_code
+ * @property int $owner_id
+ * @property string $name
+ * @property string $description
+ */
 class Project extends Model
 {
+    /**
+     * @use HasFactory<ProjectFactory>
+     */
     use HasFactory;
 
-    protected $fillable = [
-        'project_code',
-        'owner_id',
-        'name',
-        'description',
-    ];
+    protected $fillable = ['project_code', 'owner_id', 'name', 'description'];
 
     /**
-     * @return BelongsTo<User, $this>
+     * Get the owner of the project.
+     *
+     * @return BelongsTo<User, Project>
      */
     public function owner(): BelongsTo
     {
@@ -32,11 +41,11 @@ class Project extends Model
      */
     public function users(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'user_projects');
+        return $this->belongsToMany(User::class, 'user_projects')->whereNull('user_projects.deleted_at')->withTimestamps();
     }
 
     /**
-     * @return HasMany<Sprint, $this>
+     * @return HasMany<Sprint, Project>
      */
     public function sprints(): HasMany
     {

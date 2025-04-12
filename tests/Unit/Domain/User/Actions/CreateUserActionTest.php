@@ -43,7 +43,7 @@ class CreateUserActionTest extends TestCase
         $this->assertNotEquals('password123', $user->password); // Password should be hashed
         $this->assertNull($user->email_verified_at);
 
-        Event::assertDispatched(UserCreated::class, fn($event): bool => $event->user->id === $user->id);
+        Event::assertDispatched(UserCreated::class, fn ($event): bool => $event->user->id === $user->id);
     }
 
     public function test_it_throws_validation_exception_for_invalid_data(): void

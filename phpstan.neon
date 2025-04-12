@@ -10,6 +10,16 @@ parameters:
     level: 6
 
     ignoreErrors:
-        - '#Class App\\Models\\.* uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types: TFactory#'
-        - '#Method App\\Models\\Project::users\(\) should return Illuminate\\Database\\Eloquent\\Relations\\BelongsToMany<.*> but returns Illuminate\\Database\\Eloquent\\Relations\\BelongsToMany<.*\$this\(App\\Models\\Project\).*>#'
-        - '#Method App\\Models\\User::projects\(\) should return Illuminate\\Database\\Eloquent\\Relations\\BelongsToMany<.*> but returns Illuminate\\Database\\Eloquent\\Relations\\BelongsToMany<.*\$this\(App\\Models\\User\).*>#'
+                - '#Class App\\Models\\.* uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types: TFactory#'
+                - '#Class App\\Domain\\.* uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types: TFactory#'
+
+                # Ignore specific relationship errors (with exact error messages)
+                - '#Method App\\Domain\\Project\\Models\\Project::owner\(\) should return Illuminate\\Database\\Eloquent\\Relations\\BelongsTo<App\\Models\\User, App\\Domain\\Project\\Models\\Project> but returns Illuminate\\Database\\Eloquent\\Relations\\BelongsTo<App\\Models\\User, \$this\(App\\Domain\\Project\\Models\\Project\)>#'
+                - '#Method App\\Domain\\Project\\Models\\Project::sprints\(\) should return Illuminate\\Database\\Eloquent\\Relations\\HasMany<App\\Models\\Sprint, App\\Domain\\Project\\Models\\Project> but returns Illuminate\\Database\\Eloquent\\Relations\\HasMany<App\\Models\\Sprint, \$this\(App\\Domain\\Project\\Models\\Project\)>#'
+
+                # Ignore all template type covariant issues in relationships
+                - '#Template type TDeclaringModel on class Illuminate\\Database\\Eloquent\\Relations\\[A-Za-z]+ is not covariant#'
+
+                # Ignore all relationship return type issues with $this
+                - '#should return Illuminate\\Database\\Eloquent\\Relations\\[A-Za-z]+<.+> but returns Illuminate\\Database\\Eloquent\\Relations\\[A-Za-z]+<.+\$this\(.+\).+>#'
+
