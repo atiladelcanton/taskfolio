@@ -28,18 +28,18 @@ class AddUserInProjectAction
         foreach ($participants as $participant) {
             $existingRecord = DB::table('user_projects')
                 ->where('project_id', $projectId)
-                ->where('user_id', $userId)
+                ->where('user_id', $participant)
                 ->first();
             if ($existingRecord) {
                 DB::table('user_projects')
                     ->where('project_id', $projectId)
-                    ->where('user_id', $userId)
+                    ->where('user_id', $participant)
                     ->update([
                         'deleted_at' => null,
                         'updated_at' => now(),
                     ]);
             } else {
-                $project->users()->attach($userId);
+                $project->users()->attach($participant);
             }
         }
     }

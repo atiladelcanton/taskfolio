@@ -38,7 +38,9 @@ class Project extends Component
     public string|int $projectId = 0;
 
     public object $usersInSomeProjects;
-
+    /**
+     * @var array<int, array<string, mixed>>
+     */
     public array $usersInProject = [];
 
     public function render(): View|Application|Factory|\Illuminate\View\View
@@ -118,6 +120,7 @@ class Project extends Component
 
     public function syncParticipantsToProject(): void
     {
+
         AddUserInProjectAction::execute($this->projectId, $this->syncParticipants, auth()->id());
         $this->syncParticipants = [];
         self::modal('add-participants-project')->close();
