@@ -1,10 +1,12 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Domain\Board\Listeners;
 
+
 use App\Domain\Board\Models\Board;
+use App\Domain\Project\Events\CreatedProjectEvent;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\InteractsWithQueue;
 
 class CreateDefaultBoard
 {
@@ -19,13 +21,13 @@ class CreateDefaultBoard
     /**
      * Handle the event.
      */
-    public function handle(\App\Domain\Board\Events\CreateDefaultBoard $event): void
+    public function handle(CreatedProjectEvent $event): void
     {
-        $project = $event->project;
+        $projectId = $event->projectId;
         $boards = ['Backlog', 'To Do', 'In Progress', 'Review', 'Done'];
         foreach ($boards as $board) {
             Board::create([
-                'project_id' => $project->id,
+                'project_id' => $projectId,
                 'name' => $board,
             ]);
         }

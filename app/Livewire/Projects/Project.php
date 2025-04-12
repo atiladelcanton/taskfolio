@@ -54,12 +54,7 @@ class Project extends Component
     {
         $project = $this->projectForm->store();
         $this->projectForm->reset();
-        /**
-         * @todo criar um novo Event, CreatedProject
-         *    -> Listener de Board
-         *    -> Listener de Sprint
-         */
-        event(new CreateDefaultBoard($project));
+
         Flux::toast(text: 'Projeto criado com sucesso!', heading: 'Sucesso', variant: 'success');
 
         return $this->redirect(route('projects.index'), navigate: true);
@@ -89,7 +84,7 @@ class Project extends Component
         Flux::toast(text: 'Projeto deletado com sucesso!', heading: 'Sucesso', variant: 'success');
         $this->projectId = 0;
 
-        /** @todo Create a event and listener to delete boards,sprints and tasks */
+
         return $this->redirect(route('projects.index'), navigate: true);
     }
 
