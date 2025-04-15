@@ -16,6 +16,7 @@ Route::middleware(['auth', 'verified'])->group(function (): void {
     Route::get('settings/appearance', Appearance::class)->name('settings.appearance');
     Route::view('dashboard', 'dashboard')->name('dashboard');
     Route::get('/projects', App\Livewire\Projects\Project::class)->name('projects.index');
+    Route::get('/teams', App\Livewire\Teams\Team::class)->name('team');
     Route::get('/sprints/{project_code?}', Sprints\SprintComponent::class)->name('sprints.index');
 });
 

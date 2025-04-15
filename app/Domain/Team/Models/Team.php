@@ -16,11 +16,11 @@ class Team extends Model
 
     public function ownerId(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'ownerId');
+        return $this->belongsTo(User::class, 'owner_id');
     }
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class,'user_id');
     }
 }

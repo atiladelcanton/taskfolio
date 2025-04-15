@@ -52,6 +52,7 @@ class Project extends Component
 
     public function createProject(): null
     {
+        
         $project = $this->projectForm->store();
         $this->projectForm->reset();
 
