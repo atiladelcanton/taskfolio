@@ -1,30 +1,31 @@
 <?php
 
-namespace App\Domain\Invitation\DTOs;
-use JsonSerializable;
+declare(strict_types=1);
 
+namespace App\Domain\Invitation\DTOs;
+
+use JsonSerializable;
 
 final readonly class TeamInvitationDTO implements JsonSerializable
 {
     /**
-     * @param non-empty-string $email
-     * @param positive-int $teamId
-     * @param non-empty-string $billingType
-     * @param int $billingRate
+     * @param  non-empty-string  $email
+     * @param  positive-int  $teamId
+     * @param  non-empty-string  $billingType
      */
     public function __construct(
         public string $email,
         public int $teamId,
-        public string $billingType,
+        public int $billingType,
         public int $billingRate,
         public int $costRate,
+        public int $role,
     ) {}
 
     /**
      * Creates a new DTO instance from an array
      *
-     * @param array<string, mixed> $data
-     * @return self
+     * @param  array<string, mixed>  $data
      */
     public static function fromArray(array $data): self
     {
@@ -32,7 +33,9 @@ final readonly class TeamInvitationDTO implements JsonSerializable
             email: (string) $data['email'],
             teamId: (int) $data['team_id'],
             billingType: (string) $data['billing_type'],
-            billingRate: (int) $data['billing_rate'],costRate:(int) $data['cost_rate'],
+            billingRate: (int) $data['billing_rate'],
+            costRate: (int) $data['cost_rate'],
+            role: (int) $data['role'],
         );
     }
 
@@ -50,6 +53,7 @@ final readonly class TeamInvitationDTO implements JsonSerializable
             'billing_type' => $this->billingType,
             'billing_rate' => $this->billingRate,
             'cost_rate' => $this->costRate,
+            'role' => $this->role,
         ];
     }
 
@@ -60,5 +64,4 @@ final readonly class TeamInvitationDTO implements JsonSerializable
     {
         return $this->toArray();
     }
-
 }

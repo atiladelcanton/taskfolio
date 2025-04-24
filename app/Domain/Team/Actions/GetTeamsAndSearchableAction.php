@@ -1,23 +1,20 @@
 <?php
+
+declare(strict_types=1);
+
 namespace App\Domain\Team\Actions;
 
-use App\Domain\Invitation\Models\TeamInvitation;
-use App\Domain\Team\Models\Team;
-use App\Models\User;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\{DB};
 
 class GetTeamsAndSearchableAction
 {
     /**
      * Obtém os membros e convites do time do usuário logado
      *
-     * @param int $perPage Número de itens por página
-     * @param int $page Número da página atual
-     * @param string $searchTerm Termo de pesquisa opcional
-     * @return LengthAwarePaginator
+     * @param  int  $perPage  Número de itens por página
+     * @param  int  $page  Número da página atual
+     * @param  string  $searchTerm  Termo de pesquisa opcional
      */
     public static function execute(int $perPage = 10, int $page = 1, string $searchTerm = ''): LengthAwarePaginator
     {
@@ -29,7 +26,11 @@ class GetTeamsAndSearchableAction
         if (empty($teamId)) {
             // Se não houver time, retornamos uma paginação vazia
             return new LengthAwarePaginator(
-                [], 0, $perPage, $page, ['path' => request()->url()]
+                [],
+                0,
+                $perPage,
+                $page,
+                ['path' => request()->url()]
             );
         }
 
@@ -42,10 +43,11 @@ class GetTeamsAndSearchableAction
                 DB::raw("'ativo' as status"),
                 't.billing_type',
                 't.billing_rate',
-                't.cost_rate' // Adicionado o campo de valor cobrado
+                't.cost_rate',
+                't.role',
             ])
             ->join('teams AS t', 'u.id', '=', 't.user_id')
-            ->where('t.id', '=', $teamId);
+            ->where('t.owner_id', '=', auth()->user()->id);
 
         // Buscar convites pendentes do time
         $invitationQuery = DB::table('team_invitations AS ti')
@@ -56,19 +58,20 @@ class GetTeamsAndSearchableAction
                 DB::raw("'pendente' as status"),
                 'ti.billing_type',
                 'ti.billing_rate',
-                'ti.cost_rate' // Adicionado o campo de valor cobrado
+                'ti.cost_rate',
+                'ti.role',
             ])
             ->where('ti.team_id', '=', $teamId)
             ->where('ti.status', '=', 1);
 
         // Aplicar filtro de pesquisa, se fornecido
-        if (!empty($searchTerm)) {
+        if (! empty($searchTerm)) {
             $memberQuery->where(function ($query) use ($searchTerm) {
-                $query->where('u.name', 'like', '%' . $searchTerm . '%')
-                    ->orWhere('u.email', 'like', '%' . $searchTerm . '%');
+                $query->where('u.name', 'like', '%'.$searchTerm.'%')
+                    ->orWhere('u.email', 'like', '%'.$searchTerm.'%');
             });
 
-            $invitationQuery->where('ti.email', 'like', '%' . $searchTerm . '%');
+            $invitationQuery->where('ti.email', 'like', '%'.$searchTerm.'%');
         }
 
         // Combinar as consultas com union
@@ -94,7 +97,7 @@ class GetTeamsAndSearchableAction
             $page,
             [
                 'path' => request()->url(),
-                'pageName' => 'page'
+                'pageName' => 'page',
             ]
         );
     }

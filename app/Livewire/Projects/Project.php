@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Livewire\Projects;
 
-use App\Domain\Board\Events\CreateDefaultBoard;
 use App\Domain\Project\Actions\{AddUserInProjectAction,
     DeleteProjectAction,
     GetProjectByIdAction,
@@ -38,6 +37,7 @@ class Project extends Component
     public string|int $projectId = 0;
 
     public object $usersInSomeProjects;
+
     /**
      * @var array<int, array<string, mixed>>
      */
@@ -52,7 +52,6 @@ class Project extends Component
 
     public function createProject(): null
     {
-        
         $project = $this->projectForm->store();
         $this->projectForm->reset();
 
@@ -63,7 +62,7 @@ class Project extends Component
 
     public function editProject(string $id): void
     {
-        $this->projectId = (int)$id;
+        $this->projectId = (int) $id;
         $project = ProjectModel::find($id);
         $this->projectForm->fill($project);
         self::modal('new-project')->show();
@@ -85,19 +84,18 @@ class Project extends Component
         Flux::toast(text: 'Projeto deletado com sucesso!', heading: 'Sucesso', variant: 'success');
         $this->projectId = 0;
 
-
         return $this->redirect(route('projects.index'), navigate: true);
     }
 
     public function confirmDeleteProject(string $id): void
     {
-        $this->projectId = (int)$id;
+        $this->projectId = (int) $id;
         self::modal('delete-project')->show();
     }
 
     public function addParticipants(string $id): void
     {
-        $this->projectId = (int)$id;
+        $this->projectId = (int) $id;
 
         $this->usersInSomeProjects = GetUsersInMyProjectsAction::execute();
 
@@ -116,7 +114,6 @@ class Project extends Component
 
     public function syncParticipantsToProject(): void
     {
-
         AddUserInProjectAction::execute($this->projectId, $this->syncParticipants, auth()->id());
         $this->syncParticipants = [];
         self::modal('add-participants-project')->close();

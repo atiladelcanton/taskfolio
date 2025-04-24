@@ -14,6 +14,8 @@ class RegisterUserAction
 
     /**
      * Register a new user and send a verification email
+     *
+     * @throws \Exception
      */
     public function execute(UserData $userData): User
     {

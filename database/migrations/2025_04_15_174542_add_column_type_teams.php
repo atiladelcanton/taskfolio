@@ -14,7 +14,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('teams', function (Blueprint $table) {
-            $table->integer('cost_rate')->default(0)->comment('cost rate for team');
+            $table->integer('role')->nullable()->comment('type of team 1 = owner, 2 = member, 3 = client');
         });
     }
 
@@ -24,7 +24,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('teams', function (Blueprint $table) {
-            $table->dropColumn('cost_rate');
+            $table->dropColumn('role');
         });
     }
 };

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Domain\Invitation\Actions;
 
 use App\Domain\Invitation\DTOs\TeamInvitationDTO;
@@ -8,11 +10,13 @@ use Ramsey\Uuid\Uuid;
 
 class CreateInvitationAction
 {
-    public static function execute(TeamInvitationDTO $invitationDTO):void{
+    public static function execute(TeamInvitationDTO $invitationDTO): TeamInvitation
+    {
         $invitationCode = Uuid::uuid4()->toString();
         $now = now();
         $expiresAt = $now->modify('+7 days');
-        TeamInvitation::query()->create([
+
+        return TeamInvitation::query()->create([
             'email' => $invitationDTO->email,
             'team_id' => $invitationDTO->teamId,
             'invitation_code' => $invitationCode,
@@ -20,7 +24,8 @@ class CreateInvitationAction
             'billing_type' => $invitationDTO->billingType,
             'billing_rate' => $invitationDTO->billingRate,
             'cost_rate' => $invitationDTO->costRate,
-            'status' => 1
+            'role' => $invitationDTO->role,
+            'status' => 1,
         ]);
     }
 }

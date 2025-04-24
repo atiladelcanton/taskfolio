@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Domain\Team\Actions;
 
 use App\Domain\Team\Models\Team;
@@ -16,4 +18,3 @@ class ValidateIfEmailExistisAtTeam
             ->exists();
     }
 }
-

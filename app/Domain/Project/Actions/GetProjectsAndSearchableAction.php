@@ -12,7 +12,7 @@ class GetProjectsAndSearchableAction
     /**
      * Executes the action to get projects with optional search filtering.
      *
-     * @param string|null $searchTerm Optional search term
+     * @param  string|null  $searchTerm  Optional search term
      * @return LengthAwarePaginator<int, Project> The paginated projects
      */
     public static function execute(?string $searchTerm = null): LengthAwarePaginator

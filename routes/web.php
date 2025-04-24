@@ -21,3 +21,4 @@ Route::middleware(['auth', 'verified'])->group(function (): void {
 });
 
 require __DIR__.'/auth.php';
+Route::get('/register-invitation', App\Livewire\Invitations\RegisterInvitation::class)->name('register-invitation');

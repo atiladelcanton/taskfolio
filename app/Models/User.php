@@ -90,7 +90,8 @@ class User extends Authenticatable implements MustVerifyEmail
             ->implode('');
     }
 
-    public function team(): HasOne{
-        return $this->hasOne(Team::class,'owner_id');
+    public function team(): HasOne
+    {
+        return $this->hasOne(Team::class, 'owner_id');
     }
 }
