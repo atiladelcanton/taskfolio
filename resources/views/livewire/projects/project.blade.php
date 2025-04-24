@@ -82,9 +82,12 @@
                                     </flux:avatar.group>
                                 </flux:table.cell>
                                 <flux:table.cell>
+                                    @if(auth()->user()->id === $project->owner_id)
                                     <flux:dropdown>
+
                                         <flux:button icon:trailing="chevron-down">Opções</flux:button>
                                         <flux:menu>
+
                                             <flux:menu.item icon="pencil-square"
                                                             wire:click="editProject({{ $project->id }})"
                                                             class="cursor-pointer">Editar
@@ -104,6 +107,7 @@
 
                                         </flux:menu>
                                     </flux:dropdown>
+                                    @endif
                                 </flux:table.cell>
                             </flux:table.row>
                         @endforeach
@@ -167,7 +171,26 @@
                     <flux:select  multiple variant="listbox"  placeholder="Selecione os Participantes"  wire:model="syncParticipants">
                         @if($usersInSomeProjects)
                             @foreach($usersInSomeProjects as $user)
-                                <flux:select.option value="{{$user->user_id}}" >{{$user->name}}</flux:select.option>
+                                <flux:select.option value="{{$user->user_id}}" >
+                                    @if($user->user->avatar)
+                                        <flux:avatar
+                                            size="xs"
+                                            circle
+                                            src="{{asset('storage/' . $user->user->avatar)}}"
+                                            title="{{ $user->user->name }}"
+                                            class="mr-2"
+                                        />
+                                    @else
+                                        <flux:avatar
+                                            size="xs"
+                                            circle
+                                            src="https://ui-avatars.com/api/?name={{ urlencode($user->user->name) }}&background=random"
+                                            title="{{ $user->user->name }}"
+                                            class="mr-2"
+                                        />
+                                    @endif
+                                    {{$user->user->name}}
+                                </flux:select.option>
                             @endforeach
                         @endif
                     </flux:select>

@@ -80,7 +80,9 @@ class RegisterInvitation extends Component
                 'role' => $teamInvitation->role,
             ]);
 
-            $teamInvitation->delete();
+            TeamInvitation::query()
+                ->where('email', $this->emailConfirmation)
+                ->where('invitation_code', $this->registrationCode)->delete();
 
             DB::commit();
             $this->redirect(route('login'), navigate: true);
