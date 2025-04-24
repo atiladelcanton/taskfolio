@@ -15,12 +15,6 @@ class ValidateInvitationCodeAction
         }
         $registrationCode = request()->get('token');
         $email = request()->get('email');
-        $teamInvitation = TeamInvitation::query()->where('invitation_code', $registrationCode)->where('email', $email)->exists();
-
-        if (! $teamInvitation) {
-            return false;
-        }
-
-        return true;
+        return TeamInvitation::query()->where('invitation_code', $registrationCode)->where('email', $email)->exists();
     }
 }

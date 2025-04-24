@@ -52,7 +52,7 @@ class Project extends Component
 
     public function createProject(): null
     {
-        $project = $this->projectForm->store();
+        $this->projectForm->store();
         $this->projectForm->reset();
 
         Flux::toast(text: 'Projeto criado com sucesso!', heading: 'Sucesso', variant: 'success');

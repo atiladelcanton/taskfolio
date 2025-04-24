@@ -28,7 +28,7 @@ class ColaboratorForm extends Form
     #[Validate('required|numeric|min:0')]
     public int $cost_rate = 0;
 
-    public function store()
+    public function store(): void
     {
         $this->validate();
         $teamInvitationDTO = new TeamInvitationDTO(

@@ -8,10 +8,10 @@ use JsonSerializable;
 
 final readonly class TeamInvitationDTO implements JsonSerializable
 {
+    public int $id;
     /**
      * @param  non-empty-string  $email
      * @param  positive-int  $teamId
-     * @param  non-empty-string  $billingType
      */
     public function __construct(
         public string $email,

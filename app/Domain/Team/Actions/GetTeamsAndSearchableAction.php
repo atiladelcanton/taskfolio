@@ -65,8 +65,8 @@ class GetTeamsAndSearchableAction
             ->where('ti.status', '=', 1);
 
         // Aplicar filtro de pesquisa, se fornecido
-        if (! empty($searchTerm)) {
-            $memberQuery->where(function ($query) use ($searchTerm) {
+        if ($searchTerm !== '' && $searchTerm !== '0') {
+            $memberQuery->where(function ($query) use ($searchTerm): void {
                 $query->where('u.name', 'like', '%'.$searchTerm.'%')
                     ->orWhere('u.email', 'like', '%'.$searchTerm.'%');
             });
