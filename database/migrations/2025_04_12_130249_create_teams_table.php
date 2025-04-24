@@ -12,9 +12,9 @@ return new class extends Migration
     {
         Schema::create('teams', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('ownerId')->constrained('users');
+            $table->foreignId('owner_id')->constrained('users');
             $table->foreignId('user_id')->constrained('users');
-            $table->bigInteger('billiable_rate');
+            $table->bigInteger('billing_rate');
             $table->integer('billing_type');
             $table->timestamps();
             $table->softDeletes();

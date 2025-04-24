@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Project\Observers;
 
-use App\Domain\Project\Events\CreatedProjectEvent;
-use App\Domain\Project\Events\DeletedProject;
+use App\Domain\Project\Events\{CreatedProjectEvent, DeletedProject};
 use App\Domain\Project\Models\Project;
 
 class ProjectObserver

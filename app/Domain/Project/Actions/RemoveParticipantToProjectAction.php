@@ -13,6 +13,7 @@ class RemoveParticipantToProjectAction
     /**
      * @param  int  $projectId  The ID of the project
      * @param  int  $userId  The ID of the user to be removed
+     *
      * @throw DomainException
      */
     public static function execute(int $projectId, int $userId): void

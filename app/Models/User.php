@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Domain\Project\Models\Project;
+use App\Domain\Team\Models\Team;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\{BelongsToMany, HasMany};
+use Illuminate\Database\Eloquent\Relations\{BelongsToMany, HasMany, HasOne};
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
@@ -87,5 +88,10 @@ class User extends Authenticatable implements MustVerifyEmail
             ->explode(' ')
             ->map(fn (string $name) => Str::of($name)->substr(0, 1))
             ->implode('');
+    }
+
+    public function team(): HasOne
+    {
+        return $this->hasOne(Team::class, 'owner_id');
     }
 }

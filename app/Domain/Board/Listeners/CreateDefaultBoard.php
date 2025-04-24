@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Domain\Board\Listeners;
+declare(strict_types=1);
 
+namespace App\Domain\Board\Listeners;
 
 use App\Domain\Board\Models\Board;
 use App\Domain\Project\Events\CreatedProjectEvent;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 
 class CreateDefaultBoard
 {

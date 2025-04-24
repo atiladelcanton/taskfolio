@@ -2,13 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Events;
+namespace App\Domain\Invitation\Events;
 
+use App\Domain\Invitation\Models\TeamInvitation;
 use Illuminate\Broadcasting\{Channel, InteractsWithSockets, PrivateChannel};
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class CreatedProjectEvent
+class UserProjectInvitationEvent
 {
     use Dispatchable;
     use InteractsWithSockets;
@@ -17,7 +18,7 @@ class CreatedProjectEvent
     /**
      * Create a new event instance.
      */
-    public function __construct()
+    public function __construct(protected readonly TeamInvitation $invitation)
     {
         //
     }
