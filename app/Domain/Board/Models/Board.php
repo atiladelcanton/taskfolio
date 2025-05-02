@@ -6,6 +6,7 @@ namespace App\Domain\Board\Models;
 
 use App\Domain\Project\Models\Project;
 use App\Models\Task;
+use Database\Factories\BoardFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\{BelongsTo, HasMany};
@@ -18,6 +19,11 @@ class Board extends Model
         'project_id',
         'name',
     ];
+
+    protected static function newFactory(): BoardFactory
+    {
+        return BoardFactory::new();
+    }
 
     /**
      * @return BelongsTo<Project, $this>
