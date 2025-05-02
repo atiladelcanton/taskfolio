@@ -6,7 +6,8 @@ namespace Database\Seeders;
 
 use App\Domain\Board\Models\Board;
 use App\Domain\Project\Models\Project;
-use App\Models\{Sprint, Task, User};
+use App\Domain\Sprint\Models\Sprint;
+use App\Models\{Task, User};
 use Illuminate\Database\Seeder;
 use Random\RandomException;
 
