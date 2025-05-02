@@ -47,7 +47,7 @@ class GetTeamsAndSearchableAction
                 't.role',
             ])
             ->join('teams AS t', 'u.id', '=', 't.user_id')
-            ->where('t.owner_id', '=', auth()->user()->id);
+            ->where('t.owner_id', '=', auth()->user()->id)->whereNull('deleted_at');
 
         // Buscar convites pendentes do time
         $invitationQuery = DB::table('team_invitations AS ti')

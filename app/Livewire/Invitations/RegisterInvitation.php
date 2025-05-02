@@ -37,6 +37,9 @@ class RegisterInvitation extends Component
             return;
         }
 
+    if (!request()->hasValidRelativeSignature()) {
+        abort(401);
+    }
         $this->registrationCode = request()->get('token', '');
         $this->emailConfirmation = request()->get('email', '');
         $this->email = $this->emailConfirmation;
@@ -50,6 +53,7 @@ class RegisterInvitation extends Component
     public function register(): void
     {
         try {
+
             DB::beginTransaction();
 
             $validated = $this->validate([
