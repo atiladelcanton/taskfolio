@@ -46,6 +46,7 @@ class GetTeamsAndSearchableAction
                 't.cost_rate',
                 't.role',
             ])
+
             ->join('teams AS t', 'u.id', '=', 't.user_id')
             ->where('t.owner_id', '=', auth()->user()->id)->whereNull('deleted_at');
 
@@ -62,7 +63,7 @@ class GetTeamsAndSearchableAction
                 'ti.role',
             ])
             ->where('ti.team_id', '=', $teamId)
-            ->where('ti.status', '=', 1);
+            ->where('ti.status', '=', 1)->whereNull('deleted_at');
 
         // Aplicar filtro de pesquisa, se fornecido
         if ($searchTerm !== '' && $searchTerm !== '0') {

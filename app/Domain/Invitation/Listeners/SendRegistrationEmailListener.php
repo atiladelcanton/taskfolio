@@ -27,7 +27,7 @@ class SendRegistrationEmailListener
     {
 
         $registrationUrl = URL::signedRoute('register-invitation',['token' => $event->invitation->invitation_code, 'email' => $event->invitation->email],now()->addDays(7) ,false);
-        ds(url($registrationUrl));
+
         $expirationDate = Carbon::createFromTimestamp($event->invitation->expires_at)->format('d/m/Y');
         Mail::to($event->invitation->email)
             ->send(new UserRegistrationInvitation(

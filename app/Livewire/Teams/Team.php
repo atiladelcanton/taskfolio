@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace App\Livewire\Teams;
 
+use App\Domain\Invitation\Events\UserProjectInvitationEvent;
+use App\Domain\Invitation\Events\UserRegistrationInvitationEvent;
 use App\Domain\Invitation\Models\TeamInvitation;
 use App\Livewire\Forms\CollaboratorForm;
+use App\Models\User;
 use App\Domain\Team\Actions\{GetTeamsAndSearchableAction, ValidateIfEmailExistisAtTeam};
 use App\Domain\Team\RoleTeamEnum;
 
@@ -118,8 +121,10 @@ class Team extends Component
     }
     public function deleteCollaborator(): void
     {
-        $team = \App\Domain\Team\Models\Team::query()->find($this->collaboratorId);
-        $team?->delete();
+        $team = \App\Domain\Team\Models\Team::query()->where('user_id',$this->collaboratorId)
+        ->where('owner_id',auth()->id())->first();
+
+        $team?->forceDelete();
         Flux::toast(
             text: 'Colaborador removido com sucesso!',
             heading: 'Excluir Colaborador',
@@ -151,6 +156,30 @@ class Team extends Component
         Flux::toast(
             text: 'Convite cancelado com sucesso!',
             heading: 'Cancelar Convite',
+            variant: 'success'
+        );
+        $this->redirect(route('team'), navigate: true);
+    }
+
+    public function resend(string $inviteId):void{
+        $invite = TeamInvitation::query()->find($inviteId);
+        if(!$invite){
+            Flux::toast(
+                text: 'Convite nao localizado',
+                heading: 'Erro',
+                variant: 'warning'
+            );
+            return ;
+        }
+        if (User::query()->where('email', $invite->email)->exists()) {
+            UserProjectInvitationEvent::dispatch($invite);
+        } else {
+            UserRegistrationInvitationEvent::dispatch($invite);
+        }
+
+        Flux::toast(
+            text: 'Convite reenviado com sucesso!',
+            heading: 'Reenviar Convite',
             variant: 'success'
         );
         $this->redirect(route('team'), navigate: true);
