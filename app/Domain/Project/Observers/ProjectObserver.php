@@ -6,6 +6,7 @@ namespace App\Domain\Project\Observers;
 
 use App\Domain\Project\Events\{CreatedProjectEvent, DeletedProject};
 use App\Domain\Project\Models\Project;
+use Illuminate\Support\Str;
 
 class ProjectObserver
 {
@@ -14,7 +15,7 @@ class ProjectObserver
      */
     public function created(Project $project): void
     {
-        $project->project_code = 'PJR-'.$project->id;
+        $project->project_code = Str::slug($project->name,'-').'-'.$project->id;
         $project->save();
 
         event(new CreatedProjectEvent($project->id));

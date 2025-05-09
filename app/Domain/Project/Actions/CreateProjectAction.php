@@ -15,13 +15,16 @@ class CreateProjectAction
      */
     public function execute(ProjectData $data): Project
     {
-        $projectCode = $data->projectCode ?? 'PRJ-'.strtoupper(Str::random(8));
+        $projectCode = $data->projectCode ??Str::slug($data->name,'-');
 
-        return Project::create([
+        $project = Project::create([
             'project_code' => $projectCode,
             'name' => $data->name,
             'description' => $data->description,
             'owner_id' => $data->ownerId,
         ]);
+        $project->project_code = $projectCode.'-'.$project->id;
+        $project->save();
+        return $project;
     }
 }
