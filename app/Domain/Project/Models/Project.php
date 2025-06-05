@@ -27,6 +27,14 @@ class Project extends Model
     protected $fillable = ['project_code', 'owner_id', 'name', 'description'];
 
     /**
+     * @return ProjectFactory
+     */
+    protected static function newFactory(): ProjectFactory
+    {
+        return ProjectFactory::new();
+    }
+
+    /**
      * Get the owner of the project.
      *
      * @return BelongsTo<User, Project>
