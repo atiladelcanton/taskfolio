@@ -20,6 +20,11 @@ class Board extends Model
         'name',
     ];
 
+    protected static function newFactory(): BoardFactory
+    {
+        return BoardFactory::new();
+    }
+
     /**
      * @return BoardFactory
      */

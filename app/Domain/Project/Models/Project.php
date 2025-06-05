@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace App\Domain\Project\Models;
 
 use App\Domain\Board\Models\Board;
-use App\Models\{Sprint, User};
+use App\Domain\Sprint\Models\Sprint;
+use App\Models\User;
 use Database\Factories\ProjectFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -19,9 +20,6 @@ use Illuminate\Database\Eloquent\Relations\{BelongsTo, BelongsToMany, HasMany};
  */
 class Project extends Model
 {
-    /**
-     * @use HasFactory<ProjectFactory>
-     */
     use HasFactory;
 
     protected $fillable = ['project_code', 'owner_id', 'name', 'description'];

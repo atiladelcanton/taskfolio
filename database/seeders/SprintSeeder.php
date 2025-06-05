@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Database\Seeders;
 
 use App\Domain\Project\Models\Project;
-use App\Models\{Sprint};
+use App\Domain\Sprint\Models\{Sprint};
 use Illuminate\Database\Seeder;
 
 class SprintSeeder extends Seeder
