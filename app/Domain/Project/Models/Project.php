@@ -22,11 +22,6 @@ class Project extends Model
 {
     use HasFactory;
 
-    protected static function newFactory(): ProjectFactory
-    {
-        return ProjectFactory::new();
-    }
-
     protected $fillable = ['project_code', 'owner_id', 'name', 'description'];
 
     /**

@@ -16,6 +16,8 @@
                         </div>
                     </x-slot>
                 </flux:date-picker>
+                <flux:error name="sprintForm.range.start" />
+                <flux:error name="sprintForm.range.end" />
 
                 @if ($sprintId)
                     <flux:select variant="listbox" label="Status" placeholder="Status" wire:model="sprintForm.status">

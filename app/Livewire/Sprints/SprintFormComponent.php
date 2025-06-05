@@ -4,6 +4,7 @@ namespace App\Livewire\Sprints;
 
 use App\Domain\Project\Models\Project;
 use App\Domain\Sprint\Enums\SprintLivewireEvents;
+use Flux\DateRange;
 use Flux\Flux;
 use Illuminate\Validation\ValidationException;
 use Livewire\Attributes\On;
@@ -23,6 +24,7 @@ class SprintFormComponent extends Component
 
     public function mount(int $projectId, ?int $sprintId = null): void
     {
+        $this->sprintForm->range = new DateRange();
         $this->edit($projectId, $sprintId);
     }
 

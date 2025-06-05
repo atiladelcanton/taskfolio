@@ -7,6 +7,7 @@ use App\Domain\Sprint\Actions\UpdateSprintAction;
 use App\Domain\Sprint\DTOs\SprintData;
 use App\Domain\Sprint\Enums\SprintStatus;
 use App\Domain\Sprint\Models\Sprint;
+use App\Rules\SprintDateRangeAvailable;
 use Flux\DateRange;
 use Illuminate\Validation\ValidationException;
 use Livewire\Form;
@@ -25,19 +26,20 @@ class SprintForm extends Form
         $this->status = $sprint->status->value;
     }
 
-    protected function rules(): array
-    {
-        return [
-            'name' => 'required|min:3',
-        ];
-    }
-
     /**
      * @throws ValidationException
      */
     public function store(int $projectId): void
     {
-        $this->validate();
+        $this->validate([
+            'name' => 'required|min:3',
+            'range.start' => [
+                'required',
+                'date',
+                new SprintDateRangeAvailable($projectId, null, $this->range?->getEndDate()?->format('Y-m-d'))
+            ],
+            'range.end' => 'required|date|after_or_equal:range.start',
+        ]);
 
         $data = new SprintData(
             $projectId,
@@ -50,10 +52,20 @@ class SprintForm extends Form
         CreateSprintAction::execute($data);
     }
 
+    /**
+     * @throws ValidationException
+     */
     public function update(int $projectId, int $sprintId): void
     {
-        $this->validate();
-
+        $this->validate([
+            'name' => 'required|min:3',
+            'range.start' => [
+                'required',
+                'date',
+                new SprintDateRangeAvailable($projectId, $sprintId, $this->range?->getEndDate()?->format('Y-m-d'))
+            ],
+            'range.end' => 'required|date|after_or_equal:range.start',
+        ]);
         $data = new SprintData(
             $projectId,
             $this->name,

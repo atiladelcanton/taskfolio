@@ -85,7 +85,7 @@
     </flux:card>
 
     {{--  MODALS --}}
-    <flux:modal name="modal-sprint" wire:close="closeModalForm" variant="flyout">
+    <flux:modal name="modal-sprint" wire:close="closeModalForm" variant="flyout" class="md:w-96">
         <livewire:sprints.sprint-form-component :projectId="$project->id" />
     </flux:modal>
 
