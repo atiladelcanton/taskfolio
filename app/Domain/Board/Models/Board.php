@@ -26,6 +26,14 @@ class Board extends Model
     }
 
     /**
+     * @return BoardFactory
+     */
+    protected static function newFactory(): BoardFactory
+    {
+        return BoardFactory::new();
+    }
+
+    /**
      * @return BelongsTo<Project, $this>
      */
     public function project(): BelongsTo

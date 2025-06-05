@@ -47,7 +47,6 @@ final readonly class TeamInvitationDTO implements JsonSerializable
     public function toArray(): array
     {
         return [
-            'id' => $this->id,
             'email' => $this->email,
             'team_id' => $this->teamId,
             'billing_type' => $this->billingType,

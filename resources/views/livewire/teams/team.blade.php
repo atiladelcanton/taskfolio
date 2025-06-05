@@ -31,7 +31,7 @@
                         <flux:table.column>Valor Pago</flux:table.column>
                         <flux:table.column>Tipo de Cobrança</flux:table.column>
                         <flux:table.column>Perfil</flux:table.column>
-                        <flux:table.column>Status</flux:table.column>
+                        <flux:table.column>Status Convite</flux:table.column>
                         <flux:table.column>Ações</flux:table.column>
                     </flux:table.columns>
                     <flux:table.rows>
@@ -39,8 +39,9 @@
                             <flux:table.row>
                                 <flux:table.cell>{{ $member->name ?? 'N/A' }}</flux:table.cell>
                                 <flux:table.cell>{{ $member->email }}</flux:table.cell>
-                                <flux:table.cell>{{  number_format($member->billing_rate, 2, ',', '.') }}</flux:table.cell>
                                 <flux:table.cell>{{  number_format($member->cost_rate, 2, ',', '.') }}</flux:table.cell>
+                                <flux:table.cell>{{  number_format($member->billing_rate, 2, ',', '.') }}</flux:table.cell>
+
                                 <flux:table.cell>
                                     @switch($member->billing_type)
                                         @case(1)
@@ -77,7 +78,7 @@
                                             @endif
                                             @if($member->status === 'ativo')
                                                 <flux:menu.item icon="pencil-square"
-                                                                wire:click="editProject({{ $member->id }})"
+                                                                wire:click="editInvite({{ $member->id }})"
                                                                 class="cursor-pointer">Editar
                                                 </flux:menu.item>
                                             @endif
@@ -86,7 +87,7 @@
                                                     <flux:menu.separator/>
                                                 @if($member->status === 'pendente')
                                                     <flux:menu.item icon="trash" variant="danger"
-                                                                    wire:click="confirmDeleteInvite({{ $member->id }})"
+                                                                    wire:click="confirmCancelInvite('{{ $member->email }}')"
                                                                     class="cursor-pointer">
                                                         Excluir Convite
                                                     </flux:menu.item>
@@ -110,25 +111,26 @@
             @endif
         </div>
     </flux:card>
-    {{--    MODALS --}}
+    {{-- MODALS --}}
+
     <flux:modal name="new-colaborator" wire:close="closeModal" variant="flyout">
         <div class="space-y-6">
-            <form wire:submit="addColaborator">
+            <form wire:submit="{{$collaboratorId === 0 ? 'addCollaborator':'updateCollaborator'}}">
                 <div class="space-y-6">
-                    <flux:heading size="lg">Adicionar Colaborador</flux:heading>
+                    <flux:heading size="lg">{{$collaboratorId === 0 ? 'Adicionar Colaborador': 'Editar Colaborador'}}</flux:heading>
                 </div>
 
                 <div class="space-y-6 my-4">
-                    <flux:input wire:model="colaboratorForm.email" type="email" label="Email do Colaborador"
+                    <flux:input wire:model="collaboratorForm.email" type="email" label="Email do Colaborador"
                                 placeholder="exemplo@email.com"/>
-                    @error('colaboratorForm.email')
+                    @error('collaboratorForm.email')
                     <flux:text variant="danger" class="mt-1">{{ $message }}</flux:text>
                     @enderror
                 </div>
                 <div class="space-y-6 my-4">
                     <flux:select
                         required
-                        wire:model="colaboratorForm.role"
+                        wire:model="collaboratorForm.role"
                         label="Tipo de Colaborador"
                     >
                         <flux:select.option value="0" wire:key="0">Selecione o tipo de colaborador</flux:select.option>
@@ -140,7 +142,7 @@
                 <div class="space-y-6 my-4">
                     <flux:select
                         required
-                        wire:model="colaboratorForm.billing_type"
+                        wire:model="collaboratorForm.billing_type"
                         label="Tipo de Cobrança"
                     >
                         <flux:select.option value="0">Selecione o tipo de cobrança</flux:select.option>
@@ -153,7 +155,7 @@
                     <flux:input
                         type="number"
                         required
-                        wire:model="colaboratorForm.billing_rate"
+                        wire:model="collaboratorForm.billing_rate"
                         label="Valor Pago"
                         placeholder="100"
                     />
@@ -162,7 +164,7 @@
                     <flux:input
                         type="number"
                         required
-                        wire:model="colaboratorForm.cost_rate"
+                        wire:model="collaboratorForm.cost_rate"
                         label="Valor Cobrado"
                         placeholder="100"
                     />
@@ -171,7 +173,8 @@
                     <flux:modal.close>
                         <flux:button variant="subtle" class="cursor-pointer">Cancelar</flux:button>
                     </flux:modal.close>
-                    <flux:button variant="primary" type="submit" class="cursor-pointer">Adicionar Colaborador
+                    <flux:button variant="primary" type="submit" class="cursor-pointer">
+                        {{$collaboratorId === 0 ? 'Adicionar Colaborador': 'Editar Colaborador'}}
                     </flux:button>
                 </div>
             </form>
@@ -191,7 +194,26 @@
                 <flux:modal.close>
                     <flux:button variant="ghost">Cancelar</flux:button>
                 </flux:modal.close>
-                <flux:button wire:click="deleteColaborator" class="cursor-alias" variant="danger">Remover ColaboradorN
+                <flux:button wire:click="deleteCollaborator" class="cursor-alias" variant="danger">Remover Colaborador
+                </flux:button>
+            </div>
+        </div>
+    </flux:modal>
+
+    <flux:modal name="delete-invite" wire:close="closeModal" class="min-w-[22rem]">
+        <div class="space-y-6">
+            <div>
+                <flux:heading size="lg">Você cancelar esse convite?</flux:heading>
+                <flux:text class="mt-2">
+                    <p class="tracking-wide">Após a confirmação ser realizada, o link enviado será automaticamente invalidado por questões de segurança.<br/><br/> Caso seja necessário realizar o processo novamente, será preciso fazer um novo cadastro para receber um novo link de confirmação.</p>
+                </flux:text>
+            </div>
+            <div class="flex gap-2">
+                <flux:spacer/>
+                <flux:modal.close>
+                    <flux:button variant="ghost">Cancelar</flux:button>
+                </flux:modal.close>
+                <flux:button wire:click="cancelInvite" class="cursor-alias" variant="danger">Cancelar Convite
                 </flux:button>
             </div>
         </div>
