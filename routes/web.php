@@ -10,7 +10,7 @@ Route::get('/', fn () => view('welcome'))->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function (): void {
     Route::redirect('settings', 'settings/profile');
-
+Route::get('/editor',\App\Livewire\Task::class)->name('editor');
     Route::get('settings/profile', Profile::class)->name('settings.profile');
     Route::get('settings/password', Password::class)->name('settings.password');
     Route::get('settings/appearance', Appearance::class)->name('settings.appearance');
